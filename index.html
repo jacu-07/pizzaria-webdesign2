@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="pt-BR"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" name="viewport"/><meta content="mobile_tab" name="shell-type"/><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/><link href="https://fonts.googleapis.com" rel="preconnect"/><link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/><link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,700;1,600&amp;family=Plus+Jakarta+Sans:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/><style>@layer base{html,body{width:100vw;margin:0;padding:0;background-color:#161311;color:#eae1dd;}body{overscroll-behavior:none;-webkit-tap-highlight-color:transparent;}.pb-safe{padding-bottom:env(safe-area-inset-bottom,0px);}.pt-safe{padding-top:env(safe-area-inset-top,0px);}main>:first-child{margin-top:0!important;}main>:last-child{margin-bottom:0!important;}}::-webkit-scrollbar{display:none;}</style><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config = { darkMode: "class", theme: { extend: { "colors": { "surface-container-high": "#2e2927", "on-secondary-container": "#5b3800", "on-tertiary": "#003909", "on-secondary": "#472a00", "on-error-container": "#ffdad6", "secondary": "#ffb95f", "inverse-on-surface": "#342f2d", "inverse-surface": "#eae1dd", "surface-bright": "#3d3836", "primary": "#ffb3ac", "on-primary": "#680008", "on-primary-fixed": "#410003", "on-tertiary-fixed-variant": "#005312", "on-primary-fixed-variant": "#930010", "on-secondary-fixed": "#2a1700", "on-tertiary-fixed": "#002204", "tertiary-container": "#307f34", "secondary-fixed-dim": "#ffb95f", "primary-fixed": "#ffdad6", "on-surface": "#eae1dd", "outline-variant": "#5b403d", "on-secondary-fixed-variant": "#653e00", "tertiary": "#88d982", "on-error": "#690005", "secondary-fixed": "#ffddb8", "on-background": "#eae1dd", "error": "#ffb4ab", "surface-tint": "#ffb3ac", "surface-container-low": "#1f1b19", "primary-container": "#d32f2f", "secondary-container": "#ee9800", "error-container": "#93000a", "tertiary-fixed-dim": "#88d982", "surface-container-lowest": "#110d0c", "outline": "#ab8985", "on-surface-variant": "#e4beba", "on-tertiary-container": "#d8ffd0", "surface": "#161311", "tertiary-fixed": "#a3f69c", "surface-container-highest": "#393431", "surface-variant": "#393431", "primary-fixed-dim": "#ffb3ac", "background": "#161311", "on-primary-container": "#fff2f0", "surface-dim": "#161311", "surface-container": "#231f1d", "inverse-primary": "#ba1a20" }, "borderRadius": { "DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px" }, "spacing": { "space-lg": "1.5rem", "margin-lg": "2rem", "gutter": "1rem", "space-xl": "2rem", "space-sm": "0.5rem", "space-md": "1rem", "margin-md": "1.5rem", "margin": "1rem", "space-xs": "0.25rem", "gutter-sm": "0.75rem" }, "fontFamily": { "label-md": ["Plus Jakarta Sans"], "label-sm": ["Plus Jakarta Sans"], "headline-sm": ["Plus Jakarta Sans"], "body-sm": ["Plus Jakarta Sans"], "body-lg": ["Plus Jakarta Sans"], "headline-lg-mobile": ["Playfair Display"], "body-md": ["Plus Jakarta Sans"], "label-lg": ["Plus Jakarta Sans"], "headline-lg": ["Playfair Display"], "display-lg": ["Playfair Display"], "headline-md": ["Playfair Display"], "title-md": ["Plus Jakarta Sans"], "display-lg-mobile": ["Playfair Display"] }, "fontSize": { "label-md": ["12px", {"lineHeight": "16px", "letterSpacing": "0.04em", "fontWeight": "600"}], "label-sm": ["10px", {"lineHeight": "12px", "letterSpacing": "0.06em", "fontWeight": "700"}], "headline-sm": ["18px", {"lineHeight": "24px", "fontWeight": "700"}], "body-sm": ["12px", {"lineHeight": "16px", "fontWeight": "400"}], "body-lg": ["16px", {"lineHeight": "24px", "fontWeight": "400"}], "headline-lg-mobile": ["24px", {"lineHeight": "30px", "fontWeight": "600"}], "body-md": ["14px", {"lineHeight": "20px", "fontWeight": "400"}], "label-lg": ["14px", {"lineHeight": "18px", "letterSpacing": "0.02em", "fontWeight": "700"}], "headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "600"}], "display-lg": ["40px", {"lineHeight": "48px", "letterSpacing": "-0.02em", "fontWeight": "700"}], "headline-md": ["22px", {"lineHeight": "28px", "fontWeight": "600"}], "title-md": ["16px", {"lineHeight": "22px", "fontWeight": "600"}], "display-lg-mobile": ["30px", {"lineHeight": "36px", "letterSpacing": "-0.01em", "fontWeight": "700"}] } } } };</script><style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head><body class="bg-surface font-body-md text-body-md text-on-surface flex flex-col min-h-screen antialiased select-none"><header class="fixed top-0 inset-x-0 z-50 bg-surface/90 backdrop-blur-xl pt-safe shadow-[0_4px_20px_rgba(0,0,0,0.35)]"><div class="h-20 px-margin flex items-center justify-between gap-gutter-sm"><div class="flex items-center gap-space-xs shrink-0"><img alt="Bella Massa Pizzeria Logo" class="h-8 w-auto object-contain" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAGyRXH48DM5Ski9aRB1U28zImHBhmO6geMftFNNQIWKkgXU3hxc0r6diGCo02pXKlR6uTU2vzbPZLdysp4ya3yCbbsfxQJXsDoecdcEbGPhuC0Pw_hP4IuX-XK2NX1lzJJHruwzbwNb5mM3T2EeNrBUmKUXaBndPAozRBF24WqA8UaNetPHWbc03K8IZX-Ix5nFwjx65vKI35KZA1ilISfA3jknsVaBIbxwMXSHQTB015-qq-yRkRa"/><div class="flex flex-col"><span class="font-headline-md text-headline-md tracking-tight text-on-surface leading-none">Bella Massa</span><span class="font-label-sm text-label-sm text-secondary tracking-widest uppercase">Home Feed</span></div></div><div class="flex-1 flex flex-col items-center justify-center max-w-[170px] min-w-0"><button class="w-full flex items-center justify-center gap-space-xs bg-surface-container-high px-gutter-sm py-space-xs rounded-full min-h-[36px] active:scale-95 transition-transform"><span class="material-symbols-outlined text-secondary text-[16px] shrink-0">local_pizza</span><div class="flex flex-col text-left truncate"><span class="font-label-sm text-label-sm text-on-surface truncate">Rua Oscar Freire, 1420</span><span class="font-label-sm text-label-sm text-secondary-fixed-dim leading-none flex items-center gap-1"><span class="w-1.5 h-1.5 rounded-full bg-secondary animate-pulse"></span>30-40 min</span></div><span class="material-symbols-outlined text-on-surface-variant text-[14px] shrink-0">expand_more</span></button></div><div class="flex items-center gap-space-xs shrink-0"><button aria-label="Notificações" class="relative w-11 h-11 flex items-center justify-center rounded-full bg-surface-container-high text-on-surface active:scale-95 transition-transform"><span class="material-symbols-outlined text-[20px]">notifications</span><span class="absolute top-2 right-2 w-2 h-2 rounded-full bg-primary-container ring-2 ring-surface"></span></button><div class="w-8 h-8 rounded-full bg-primary flex items-center justify-center shrink-0"><span class="material-symbols-outlined text-on-primary text-[18px]">person</span></div></div></div></header><main class="flex-1 flex flex-col relative w-full pt-20 pb-24 bg-surface"><div class="flex flex-col w-full">
+<!-- Live Oven Status Bar -->
+<section class="px-margin pt-space-xs pb-space-sm">
+<div class="flex items-center justify-between gap-space-xs bg-surface-container px-space-md py-space-xs rounded-full shadow-sm">
+<div class="flex items-center gap-space-xs min-w-0">
+<span class="relative flex h-2.5 w-2.5 shrink-0">
+<span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-secondary opacity-75"></span>
+<span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-secondary-container"></span>
+</span>
+<p class="font-label-sm text-label-sm text-on-surface truncate">
+          Forno a lenha a 460°C • <span class="text-secondary">Entrega: 30-40 min</span>
+</p>
+</div>
+<div class="flex items-center gap-1 shrink-0 text-secondary-fixed-dim">
+<span class="material-symbols-outlined text-[16px]">local_fire_department</span>
+<span class="font-label-sm text-label-sm font-bold">Ao Vivo</span>
+</div>
+</div>
+</section>
+<!-- Greeting & Loyalty Level Card -->
+<section class="px-margin py-space-xs">
+<div class="bg-surface-container-high rounded-xl p-space-md shadow-md flex flex-col gap-space-sm relative overflow-hidden">
+<div class="flex items-start justify-between gap-space-sm z-10">
+<div class="flex flex-col min-w-0">
+<span class="font-label-sm text-label-sm uppercase tracking-wider text-secondary">La vera pizza napoletana</span>
+<h2 class="font-headline-lg-mobile text-headline-lg-mobile text-on-surface leading-tight mt-0.5">
+            Buonasera, Roberto! 🍕
+          </h2>
+</div>
+<div class="w-10 h-10 rounded-full bg-surface-container flex items-center justify-center shrink-0 shadow-sm">
+<span class="material-symbols-outlined text-secondary text-[22px]" style="font-variation-settings: 'FILL' 1;">workspace_premium</span>
+</div>
+</div>
+<!-- Loyalty Progress Status -->
+<div class="bg-surface-container-low rounded-lg p-space-sm flex flex-col gap-space-xs z-10">
+<div class="flex items-center justify-between text-on-surface">
+<div class="flex items-center gap-1.5">
+<span class="px-2 py-0.5 rounded-full bg-secondary-container text-on-secondary-container font-label-sm text-label-sm font-bold">
+              Membro Ouro
+            </span>
+<span class="font-label-md text-label-md text-on-surface font-semibold">450 pts</span>
+</div>
+<span class="font-label-sm text-label-sm text-secondary font-medium">Meta: 500 pts</span>
+</div>
+<!-- Custom Progress Bar -->
+<div class="w-full bg-surface-container-highest rounded-full h-2 overflow-hidden">
+<div class="bg-gradient-to-r from-secondary to-primary-container h-full rounded-full transition-all duration-700 ease-out" style="width: 90%;"></div>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px] text-tertiary">celebration</span>
+          Falta pouco! Só mais 50 pontos para resgatar 1 pizza grátis.
+        </p>
+</div>
+<!-- Subtle background radiant glow -->
+<div class="absolute -right-8 -bottom-10 w-32 h-32 bg-primary-container/15 rounded-full blur-2xl pointer-events-none"></div>
+</div>
+</section>
+<!-- Hero Special Batch Card -->
+<section class="px-margin py-space-sm">
+<div class="relative rounded-xl overflow-hidden bg-surface-container shadow-xl flex flex-col">
+<!-- Pizza Photography Header -->
+<div class="relative w-full h-56 bg-surface-container-lowest">
+<img class="w-full h-full object-cover" data-alt="Artisanal wood-fired Neapolitan pizza crowned with black truffle shaving slivers, wild sauteed chanterelle mushrooms, creamy fior di latte mozzarella, and fresh thyme herbs, served on rustic charred dark stone with embers glowing softly in the background, warm cinematic Italian pizzeria lighting, hyper realistic food photography." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBp2CeF_V_n_fI72JF8veiaGkXGO3VQ94FWZH33izv8uKJzIKyr1idoslt1XiS1Fofk95I5Y0Cn98XHxfmJ5JWhb-UbJrDt3MikC-6zQU34uY_9WKct6WMrUeZci6aBomPNfuRpx8Ih6VhajWU9uNk6qF0g96cn8_jnu7gy2bzjHVCaZVWlGxewzI2I81323_fmF_c7SHVmmAanhfqWwsO93MigqiD563lkCZ-60177z3lm8UGFEJXe"/>
+<div class="absolute inset-0 bg-gradient-to-t from-surface-container via-surface-container/30 to-transparent"></div>
+<!-- Badges Overlay -->
+<div class="absolute top-3 left-3 flex flex-wrap gap-1.5 z-10">
+<span class="flex items-center gap-1 bg-surface-container-lowest/85 backdrop-blur-md px-2.5 py-1 rounded-full text-secondary font-label-sm text-label-sm font-bold shadow-sm">
+<span class="material-symbols-outlined text-[14px]">local_fire_department</span>
+            Forno a 450°C
+          </span>
+<span class="flex items-center gap-1 bg-surface-container-lowest/85 backdrop-blur-md px-2.5 py-1 rounded-full text-on-surface font-label-sm text-label-sm font-semibold shadow-sm">
+<span class="material-symbols-outlined text-[14px] text-tertiary">hourglass_bottom</span>
+            Massa 48h
+          </span>
+</div>
+<div class="absolute top-3 right-3 z-10">
+<span class="px-2.5 py-1 rounded-full bg-primary-container text-on-primary-container font-label-sm text-label-sm font-bold shadow-md">
+            EDIÇÃO LIMITADA
+          </span>
+</div>
+</div>
+<!-- Content Area -->
+<div class="p-space-md flex flex-col gap-space-xs relative">
+<span class="font-label-sm text-label-sm text-secondary font-semibold uppercase tracking-wider">
+          Fornada Especial de Hoje
+        </span>
+<h3 class="font-headline-md text-headline-md text-on-surface">
+          Tartufo &amp; Funghi Selvatici
+        </h3>
+<p class="font-body-md text-body-md text-on-surface-variant line-clamp-2">
+          Lâminas nobres de trufas negras de Norcia, cogumelos porcini frescos salteados no azeite extravirgem, fior di latte e tomilho da horta.
+        </p>
+<div class="flex items-center justify-between pt-space-sm mt-space-xs">
+<div class="flex flex-col">
+<span class="font-label-sm text-label-sm text-on-surface-variant">Preço Especial</span>
+<div class="flex items-baseline gap-1">
+<span class="font-label-md text-label-md text-secondary">R$</span>
+<span class="font-headline-sm text-headline-sm text-on-surface font-bold">89,90</span>
+</div>
+</div>
+<button class="h-[48px] px-space-lg rounded-full bg-primary-container text-on-primary-container font-label-lg text-label-lg flex items-center justify-center gap-space-xs shadow-[0_6px_18px_-2px_rgba(211,47,47,0.5)] active:scale-95 transition-transform" onclick="addHeroPizza(this)">
+<span class="material-symbols-outlined text-[18px]">shopping_basket</span>
+<span>Pedir Agora</span>
+</button>
+</div>
+</div>
+</div>
+</section>
+<!-- Interactive Custom Pizza Builder Banner -->
+<section class="px-margin py-space-sm">
+<div class="bg-gradient-to-r from-surface-container-high via-surface-container to-surface-container-high rounded-xl p-space-md shadow-md flex items-center justify-between gap-space-md relative overflow-hidden">
+<div class="flex flex-col gap-1 z-10 flex-1 min-w-0">
+<div class="flex items-center gap-1.5">
+<span class="material-symbols-outlined text-secondary text-[20px]">palette</span>
+<span class="font-label-sm text-label-sm uppercase tracking-wider text-secondary font-bold">Monte do Seu Jeito</span>
+</div>
+<h4 class="font-headline-sm text-headline-sm text-on-surface leading-snug">
+          Crie sua obra de arte!
+        </h4>
+<p class="font-body-sm text-body-sm text-on-surface-variant line-clamp-2">
+          Até 2 sabores, bordas recheadas e massa de fermentação lenta de 48h.
+        </p>
+<div class="pt-space-xs">
+<button class="inline-flex items-center gap-1 px-space-md py-2 rounded-full bg-secondary-container text-on-secondary-container font-label-md text-label-md font-bold shadow-sm active:scale-95 transition-transform">
+<span>Começar Montagem</span>
+<span class="material-symbols-outlined text-[16px]">arrow_forward</span>
+</button>
+</div>
+</div>
+<div class="w-24 h-24 shrink-0 rounded-full bg-surface-container-lowest p-1 shadow-lg relative flex items-center justify-center">
+<img class="w-full h-full object-cover rounded-full" data-alt="Top down overhead close-up shot of raw sourdough pizza base sprinkled with organic flour, vibrant San Marzano red tomato sauce swirl, fresh emerald green basil leaves, and artisanal fresh mozzarella curd cubes ready to bake." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAecsNugy_f67L9v6gDjQhlvjetNqhcPGwbU97N3GwqF-S-ndgGU4r2oSn7IBc2VxJfZgFp4Whr7ZAN0KWHIxSM_s_pV-0mg642lGqsBZj8zOounWE6dhB4Tdv5gtwXFaIpc-PbP-1vkoC86U-InIBQmEpZn0qiYt0aJ_Sz7JmTmHUw1R-6yKdNELQ5R8R4-jRvF1DGEt9-c9IBcsA6hyADrWvzd8GXq7UoN92uW2UYjb6sgb-XK0py"/>
+<div class="absolute -bottom-1 -right-1 bg-primary-container text-on-primary-container p-1 rounded-full shadow-md flex items-center justify-center">
+<span class="material-symbols-outlined text-[16px]">auto_fix_high</span>
+</div>
+</div>
+</div>
+</section>
+<!-- Horizontal Scroll Filter Chips -->
+<section class="py-space-sm">
+<div class="flex items-center gap-space-xs overflow-x-auto px-margin no-scrollbar">
+<button class="chip-filter active shrink-0 px-space-md py-2 rounded-full bg-primary-container text-on-primary-container font-label-md text-label-md font-semibold flex items-center gap-1 shadow-sm transition-colors" data-category="destaques">
+<span>🔥</span>
+<span>Destaques</span>
+</button>
+<button class="chip-filter shrink-0 px-space-md py-2 rounded-full bg-surface-container-high text-on-surface font-label-md text-label-md font-medium flex items-center gap-1 shadow-sm transition-colors" data-category="tradicionais">
+<span>🍕</span>
+<span>Tradicionais</span>
+</button>
+<button class="chip-filter shrink-0 px-space-md py-2 rounded-full bg-surface-container-high text-on-surface font-label-md text-label-md font-medium flex items-center gap-1 shadow-sm transition-colors" data-category="assinatura">
+<span>✨</span>
+<span>Assinatura do Chef</span>
+</button>
+<button class="chip-filter shrink-0 px-space-md py-2 rounded-full bg-surface-container-high text-on-surface font-label-md text-label-md font-medium flex items-center gap-1 shadow-sm transition-colors" data-category="vegetarianas">
+<span>🌱</span>
+<span>Vegetarianas</span>
+</button>
+<button class="chip-filter shrink-0 px-space-md py-2 rounded-full bg-surface-container-high text-on-surface font-label-md text-label-md font-medium flex items-center gap-1 shadow-sm transition-colors" data-category="sobremesas">
+<span>🍫</span>
+<span>Sobremesas</span>
+</button>
+<button class="chip-filter shrink-0 px-space-md py-2 rounded-full bg-surface-container-high text-on-surface font-label-md text-label-md font-medium flex items-center gap-1 shadow-sm transition-colors" data-category="bebidas">
+<span>🍷</span>
+<span>Vinhos &amp; Bebidas</span>
+</button>
+</div>
+</section>
+<!-- Section Title: Mais Pedidos da Semana -->
+<section class="px-margin pt-space-md pb-space-xs flex items-baseline justify-between">
+<div class="flex flex-col">
+<h3 class="font-headline-md text-headline-md text-on-surface">
+        Mais Pedidos da Semana
+      </h3>
+<span class="font-body-sm text-body-sm text-on-surface-variant">
+        As escolhas consagradas dos nossos clientes fiéis
+      </span>
+</div>
+<span class="font-label-sm text-label-sm text-secondary font-bold uppercase tracking-wider">
+      Top 4
+    </span>
+</section>
+<!-- 2-Column Grid of Best-Sellers -->
+<section class="px-margin py-space-xs">
+<div class="grid grid-cols-2 gap-gutter-sm">
+<!-- Item 1: Margherita Verace D.O.P. -->
+<div class="bg-surface-container rounded-xl overflow-hidden shadow-md flex flex-col justify-between p-space-sm group">
+<div class="flex flex-col">
+<div class="relative w-full h-32 rounded-lg overflow-hidden bg-surface-container-lowest mb-space-xs">
+<img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" data-alt="Classic traditional Margherita Verace pizza with blistered authentic crust, rich San Marzano crushed red tomato sauce, melted Buffalo mozzarella discs, fresh green basil leaves, and golden Italian olive oil drizzle on rustic slate." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAWMD5DQt8fuuzDedCPE2jDjEuZPI6ZZfyVksEY_SnLt0J6FFghCWdyZ5T1ekJn4XY9swELkL89AoZWmmlGlxqVfnyQumTHf42rbJNJnta3BJ10XIsY4G90WWxk6NOaOwtCHQfirQt4Sj9etlmcVYI-6iPVnDyMhJv96N9VErAxTvLLV6VeC6qimzRGNHudlx3xvrSblL78X2vnarztA94y4qMXJVyl1DHwIe9cnJ4HUaxG8awaDuRE"/>
+<div class="absolute top-1.5 left-1.5 bg-surface-container-lowest/80 backdrop-blur-sm px-1.5 py-0.5 rounded-full flex items-center gap-0.5 text-secondary">
+<span class="material-symbols-outlined text-[12px]" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="font-label-sm text-label-sm font-bold">4.9</span>
+</div>
+<div class="absolute bottom-1.5 left-1.5 bg-secondary-container/90 px-1.5 py-0.5 rounded-full text-on-secondary-container font-label-sm text-label-sm font-bold">
+              D.O.P.
+            </div>
+</div>
+<h4 class="font-headline-sm text-headline-sm text-on-surface leading-tight truncate">
+            Margherita Verace
+          </h4>
+<p class="font-body-sm text-body-sm text-on-surface-variant line-clamp-2 mt-1 min-h-[32px]">
+            Molho San Marzano, mozzarella di bufala, manjericão e azeite E.V.
+          </p>
+</div>
+<div class="flex items-center justify-between mt-space-sm pt-space-xs">
+<div class="flex flex-col">
+<span class="font-label-sm text-label-sm text-on-surface-variant">380+ pediram</span>
+<span class="font-title-md text-title-md text-secondary font-bold">R$ 68,00</span>
+</div>
+<button aria-label="Adicionar Margherita Verace ao carrinho" class="w-9 h-9 rounded-full bg-primary-container text-on-primary-container flex items-center justify-center shadow-md active:scale-90 transition-transform" onclick="quickAdd(this, 'Margherita Verace')">
+<span class="material-symbols-outlined text-[20px]">add</span>
+</button>
+</div>
+</div>
+<!-- Item 2: Diavola Piccante Especial -->
+<div class="bg-surface-container rounded-xl overflow-hidden shadow-md flex flex-col justify-between p-space-sm group">
+<div class="flex flex-col">
+<div class="relative w-full h-32 rounded-lg overflow-hidden bg-surface-container-lowest mb-space-xs">
+<img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" data-alt="Diavola spicy pizza with crispy cured artisanal pepperoni slices cupping rich red oil, caramelized red onion rings, fresh fior di latte mozzarella on dark charred oven baked crust, dark moody Neapolitan pizzeria lighting." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAuBI9mxS-ImU252KMXybaP-2LLJw7EVVfFLc3-FeqbtfHd3cWmN_w7mJbpYZaijoymeT7-DRo92tzZwdtyXnxyyOuh1-sQ_aJGW25LV89c4N-AWf-LYKn7dRz3g-DVD5mHqqR67H_VvJfprUiAXZfed-OwHvXUHP87T-xpdubd-m_E5g5M8cx_ffhgPisbMl2uE4eTFdIjmyaIEN2b3ucfKyQoMEfnMkgFQse6Jdx0sWNbjcgv4Kis"/>
+<div class="absolute top-1.5 left-1.5 bg-surface-container-lowest/80 backdrop-blur-sm px-1.5 py-0.5 rounded-full flex items-center gap-0.5 text-secondary">
+<span class="material-symbols-outlined text-[12px]" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="font-label-sm text-label-sm font-bold">4.8</span>
+</div>
+<div class="absolute bottom-1.5 left-1.5 bg-primary-container/90 px-1.5 py-0.5 rounded-full text-on-primary-container font-label-sm text-label-sm font-bold flex items-center gap-0.5">
+<span class="material-symbols-outlined text-[11px]">local_fire_department</span>
+<span>Picante</span>
+</div>
+</div>
+<h4 class="font-headline-sm text-headline-sm text-on-surface leading-tight truncate">
+            Diavola Piccante
+          </h4>
+<p class="font-body-sm text-body-sm text-on-surface-variant line-clamp-2 mt-1 min-h-[32px]">
+            Salame artesanal apimentado, cebola caramelizada e fior di latte.
+          </p>
+</div>
+<div class="flex items-center justify-between mt-space-sm pt-space-xs">
+<div class="flex flex-col">
+<span class="font-label-sm text-label-sm text-on-surface-variant">240+ pediram</span>
+<span class="font-title-md text-title-md text-secondary font-bold">R$ 74,00</span>
+</div>
+<button aria-label="Adicionar Diavola Piccante ao carrinho" class="w-9 h-9 rounded-full bg-primary-container text-on-primary-container flex items-center justify-center shadow-md active:scale-90 transition-transform" onclick="quickAdd(this, 'Diavola Piccante')">
+<span class="material-symbols-outlined text-[20px]">add</span>
+</button>
+</div>
+</div>
+<!-- Item 3: Quatro Formaggi Gran Riserva -->
+<div class="bg-surface-container rounded-xl overflow-hidden shadow-md flex flex-col justify-between p-space-sm group">
+<div class="flex flex-col">
+<div class="relative w-full h-32 rounded-lg overflow-hidden bg-surface-container-lowest mb-space-xs">
+<img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" data-alt="Four cheese gourmet pizza Quattro Formaggi with creamy sweet gorgonzola drops, aged Parmesan 24 months flakes, smoked provolone, and hot spicy wildflower honey drizzle glistening on puffed wood-fired Neapolitan crust." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDayw7-RwB5z2EtnpFDuN7tD18katZkT0BsLVrgSAGNvitEzyI2e34ywb-YVDOTBeANrNuoGOsjous6IoEwSi48kRP7P_t2v4IKzpF4RUaMD-YjSw5m3sgu9zpP6kcLtsMGMxUuCgkve4qwAk-cW2qF2WVNjtY4on9yEqC80AHprHXNOzP5gD-5UFr4rp8pfwwmZLdX5ho-ndX914kQzFi8iauHbuW_ctSueDxBxUpyeiAPfjEk_G6o"/>
+<div class="absolute top-1.5 left-1.5 bg-surface-container-lowest/80 backdrop-blur-sm px-1.5 py-0.5 rounded-full flex items-center gap-0.5 text-secondary">
+<span class="material-symbols-outlined text-[12px]" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="font-label-sm text-label-sm font-bold">4.9</span>
+</div>
+<div class="absolute bottom-1.5 left-1.5 bg-secondary-container/90 px-1.5 py-0.5 rounded-full text-on-secondary-container font-label-sm text-label-sm font-bold">
+              Mel Picante
+            </div>
+</div>
+<h4 class="font-headline-sm text-headline-sm text-on-surface leading-tight truncate">
+            Quatro Formaggi
+          </h4>
+<p class="font-body-sm text-body-sm text-on-surface-variant line-clamp-2 mt-1 min-h-[32px]">
+            Gorgonzola doce, parmesão 24m, provolone defumado e mel picante.
+          </p>
+</div>
+<div class="flex items-center justify-between mt-space-sm pt-space-xs">
+<div class="flex flex-col">
+<span class="font-label-sm text-label-sm text-on-surface-variant">190+ pediram</span>
+<span class="font-title-md text-title-md text-secondary font-bold">R$ 78,00</span>
+</div>
+<button aria-label="Adicionar Quatro Formaggi ao carrinho" class="w-9 h-9 rounded-full bg-primary-container text-on-primary-container flex items-center justify-center shadow-md active:scale-90 transition-transform" onclick="quickAdd(this, 'Quatro Formaggi')">
+<span class="material-symbols-outlined text-[20px]">add</span>
+</button>
+</div>
+</div>
+<!-- Item 4: Parma & Rúcula Fresca -->
+<div class="bg-surface-container rounded-xl overflow-hidden shadow-md flex flex-col justify-between p-space-sm group">
+<div class="flex flex-col">
+<div class="relative w-full h-32 rounded-lg overflow-hidden bg-surface-container-lowest mb-space-xs">
+<img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" data-alt="Gourmet artisan pizza draped with thin prosciutto di Parma cured ham folds, baby wild arugula leaves, Grana Padano cheese shavings, and dark aged balsamic vinegar reduction glaze drizzle, Neapolitan charred dough crust." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDDUyO-069CKgA2jvleH-D9wWit-8IZhPpa6UBdQxkyt6vWLnueWEkLhjEOsI8i7OAsfm3p0AiGruqyKu4Ib9i1rPy8S1DpbPRFEwCjO09-eE2m-gKOeDe-JP_S_0INpMAm_P1XsOTWAqNJrh4al76gJdCiTcUvtxY3HduJRZF0nC9Mrgp2u6CutyH3DAhs_FmnpVkZg4c2itcOXS78Et03_fNmJgXN0kAy4en8S2mWnftPCkCNr1EW"/>
+<div class="absolute top-1.5 left-1.5 bg-surface-container-lowest/80 backdrop-blur-sm px-1.5 py-0.5 rounded-full flex items-center gap-0.5 text-secondary">
+<span class="material-symbols-outlined text-[12px]" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="font-label-sm text-label-sm font-bold">5.0</span>
+</div>
+<div class="absolute bottom-1.5 left-1.5 bg-surface-container-highest/90 px-1.5 py-0.5 rounded-full text-secondary font-label-sm text-label-sm font-bold">
+              Premium
+            </div>
+</div>
+<h4 class="font-headline-sm text-headline-sm text-on-surface leading-tight truncate">
+            Parma &amp; Rúcula
+          </h4>
+<p class="font-body-sm text-body-sm text-on-surface-variant line-clamp-2 mt-1 min-h-[32px]">
+            Presunto cru tipo Parma, rúcula selvagem, grana padano e balsâmico.
+          </p>
+</div>
+<div class="flex items-center justify-between mt-space-sm pt-space-xs">
+<div class="flex flex-col">
+<span class="font-label-sm text-label-sm text-on-surface-variant">310+ pediram</span>
+<span class="font-title-md text-title-md text-secondary font-bold">R$ 84,00</span>
+</div>
+<button aria-label="Adicionar Parma &amp; Rúcula ao carrinho" class="w-9 h-9 rounded-full bg-primary-container text-on-primary-container flex items-center justify-center shadow-md active:scale-90 transition-transform" onclick="quickAdd(this, 'Parma &amp; Rúcula')">
+<span class="material-symbols-outlined text-[20px]">add</span>
+</button>
+</div>
+</div>
+</div>
+</section>
+<!-- Craftsmanship / Quality Guarantee Banner -->
+<section class="px-margin pt-space-md pb-space-lg">
+<div class="bg-surface-container-low rounded-xl p-space-md flex items-center gap-space-md">
+<div class="w-12 h-12 rounded-full bg-surface-container flex items-center justify-center text-secondary shrink-0 shadow-sm">
+<span class="material-symbols-outlined text-[26px]">verified</span>
+</div>
+<div class="flex flex-col min-w-0">
+<span class="font-headline-sm text-headline-sm text-on-surface">Padrão Tradizionale</span>
+<p class="font-body-sm text-body-sm text-on-surface-variant leading-snug">
+          Farinha italiana tipo 00, fermentação natural de 48 horas e forno certificado pela Associazione Verace Pizza Napoletana.
+        </p>
+</div>
+</div>
+</section>
+<!-- Micro-interaction Toast Notification -->
+<div class="fixed bottom-24 inset-x-margin z-50 transform translate-y-32 opacity-0 transition-all duration-300 pointer-events-none flex justify-center" id="quick-toast">
+<div class="bg-secondary-container text-on-secondary-container px-space-md py-2.5 rounded-full shadow-2xl flex items-center gap-2">
+<span class="material-symbols-outlined text-[18px]">check_circle</span>
+<span class="font-label-md text-label-md font-bold" id="toast-message">Item adicionado com sucesso!</span>
+</div>
+</div>
+</div>
+<script>
+  // Filter pill chip selection interaction
+  document.querySelectorAll('.chip-filter').forEach(chip => {
+    chip.addEventListener('click', () => {
+      document.querySelectorAll('.chip-filter').forEach(c => {
+        c.classList.remove('bg-primary-container', 'text-on-primary-container', 'active');
+        c.classList.add('bg-surface-container-high', 'text-on-surface');
+      });
+      chip.classList.add('bg-primary-container', 'text-on-primary-container', 'active');
+      chip.classList.remove('bg-surface-container-high', 'text-on-surface');
+    });
+  });
+
+  // Toast feedback helper
+  function triggerToast(text) {
+    const toast = document.getElementById('quick-toast');
+    const msg = document.getElementById('toast-message');
+    if (!toast || !msg) return;
+    msg.textContent = text;
+    toast.classList.remove('translate-y-32', 'opacity-0');
+    toast.classList.add('translate-y-0', 'opacity-100');
+    setTimeout(() => {
+      toast.classList.remove('translate-y-0', 'opacity-100');
+      toast.classList.add('translate-y-32', 'opacity-0');
+    }, 2200);
+  }
+
+  function quickAdd(btn, pizzaName) {
+    btn.classList.add('scale-75');
+    setTimeout(() => btn.classList.remove('scale-75'), 150);
+    triggerToast(pizzaName + ' adicionada ao carrinho!');
+  }
+
+  function addHeroPizza(btn) {
+    btn.classList.add('scale-95');
+    setTimeout(() => btn.classList.remove('scale-95'), 150);
+    triggerToast('Tartufo & Funghi adicionada!');
+  }
+</script></main><nav class="fixed bottom-0 inset-x-0 z-50 pb-safe bg-surface-container-low/95 backdrop-blur-xl shadow-[0_-8px_24px_rgba(0,0,0,0.5)]" data-active-classes="text-primary-container scale-105"><div class="flex justify-around items-center h-20 px-space-xs"><a aria-current="page" class="flex flex-col items-center justify-center gap-space-xs w-14 h-14 rounded-full transition-transform text-primary-container scale-105" data-path="home-feed" href="index.html"><span class="material-symbols-outlined text-[24px]">local_fire_department</span><span class="font-label-sm text-label-sm">Início</span></a><a class="flex flex-col items-center justify-center gap-space-xs w-14 h-14 rounded-full text-on-surface-variant transition-transform" data-path="cardapio" href="cardapio.html"><span class="material-symbols-outlined text-[24px]">menu_book</span><span class="font-label-sm text-label-sm">Cardápio</span></a><div class="relative -top-5 flex flex-col items-center justify-center"><a class="flex flex-col items-center justify-center w-14 h-14 rounded-full bg-primary-container text-on-primary-container shadow-[0_8px_20px_-2px_rgba(211,47,47,0.6)] active:scale-95 transition-transform" data-path="monte-a-sua" href="monte-sua-pizza.html"><span class="material-symbols-outlined text-[26px]">auto_fix_high</span></a><span class="font-label-sm text-label-sm text-secondary mt-1 font-bold tracking-tight text-center leading-none">Monte a Sua</span></div><a class="flex flex-col items-center justify-center gap-space-xs w-14 h-14 rounded-full text-on-surface-variant transition-transform relative" data-path="carrinho" href="carrinho.html"><div class="relative"><span class="material-symbols-outlined text-[24px]">shopping_bag</span><span class="absolute -top-1 -right-2 bg-primary-container text-on-primary-container font-label-sm text-label-sm px-1.5 py-0.2 rounded-full min-w-[16px] text-center font-bold">3</span></div><span class="font-label-sm text-label-sm">Carrinho</span></a><a class="flex flex-col items-center justify-center gap-space-xs w-14 h-14 rounded-full text-on-surface-variant transition-transform" data-path="clube-fidelidade" href="index.html#clube-fidelidade"><span class="material-symbols-outlined text-[24px]">loyalty</span><span class="font-label-sm text-label-sm">Clube</span></a></div></nav></body></html>
