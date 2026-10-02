@@ -1,19 +1,19 @@
 # Bella Massa Pizzeria
 
-Site estático pronto para publicação no GitHub Pages.
+Projeto acadêmico em HTML/CSS/JavaScript com todas as áreas em um único `index.html` e estilos externos em `style.css`.
 
-## Arquivos
-- `index.html` — página inicial
-- `cardapio.html` — cardápio
-- `monte-sua-pizza.html` — monte sua pizza
-- `carrinho.html` — carrinho
+## Estrutura
+- `index.html` — página principal com abas Início, Cardápio, Monte sua Pizza, Carrinho e Clube.
+- `style.css` — folha de estilos externa com layout, responsividade, estados de interação e melhorias visuais.
 
-## Publicar no GitHub Pages
-1. Crie um repositório no GitHub.
-2. Envie estes arquivos para a raiz do repositório.
-3. Vá em **Settings → Pages**.
-4. Em **Build and deployment**, selecione **Deploy from a branch**.
-5. Escolha a branch `main` e a pasta `/ (root)`.
-6. Salve e aguarde a publicação.
+## Git no VS Code
+```bash
+git init
+git add .
+git commit -m "Projeto Bella Massa com CSS externo"
+git branch -M main
+git remote add origin https://github.com/SEU-USUARIO/SEU-REPOSITORIO.git
+git push -u origin main
+```
 
-O projeto é HTML estático e não precisa de PHP para funcionar no GitHub Pages.
+Depois, no GitHub Pages, selecione a branch `main` e a pasta `/root` em Settings > Pages.
