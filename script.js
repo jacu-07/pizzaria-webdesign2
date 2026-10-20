@@ -93,64 +93,113 @@
     });
   }));
 
-  // Carrinho demonstrativo persistente.
+  // Carrinho funcional, com itens dinâmicos e persistência local.
   let cart = safeRead('bellaMassaCart', []);
   if (!Array.isArray(cart)) cart = [];
-  const cartCountEls = $$('[data-cart-count]');
-  const cartTotalEls = $$('[data-cart-total]');
-  function saveCart() { safeWrite('bellaMassaCart', cart); }
+  cart = cart.filter(x => x && typeof x.name === 'string').map((x, i) => ({id:x.id || String(Date.now()+i), name:x.name, price:Math.max(0,Number(x.price)||0), qty:Math.max(1,Number(x.qty)||1)}));
+  const cartCountEls = $$('[data-cart-count]'), cartTotalEls = $$('[data-cart-total]');
+  const cartPanel = $('#tab-carrinho');
+  const orderHeading = cartPanel && [...cartPanel.querySelectorAll('*')].find(el => el.children.length === 0 && el.textContent.trim() === 'Seu Pedido');
+  const orderHeader = orderHeading?.parentElement?.parentElement;
+  let cartItemsHost = $('#live-cart-items');
+  if (orderHeader && !cartItemsHost) {
+    cartItemsHost = document.createElement('div'); cartItemsHost.id = 'live-cart-items'; cartItemsHost.className = 'flex flex-col gap-3';
+    orderHeader.insertAdjacentElement('afterend', cartItemsHost);
+    ['Pizza Meio a Meio','Tartufo & Funghi','Coca-Cola Zero'].forEach(name => {
+      const h = [...cartPanel.querySelectorAll('h3')].find(el => el.textContent.trim() === name);
+      const card = h?.closest('.bg-surface-container.rounded-xl'); if (card) card.hidden = true;
+    });
+    const sumTitle = [...cartPanel.querySelectorAll('h3')].find(el => el.textContent.trim() === 'Resumo de Valores');
+    if (sumTitle?.parentElement) sumTitle.parentElement.dataset.liveSummary = 'true';
+  }
+  const saveCart = () => safeWrite('bellaMassaCart', cart);
   function renderCart() {
-    const count = cart.reduce((sum, item) => sum + item.qty, 0);
-    const total = cart.reduce((sum, item) => sum + item.price * item.qty, 0);
+    const count = cart.reduce((s,x)=>s+x.qty,0), subtotal = cart.reduce((s,x)=>s+x.price*x.qty,0);
+    const tip = Math.max(0,Number(safeRead('bellaTip',0))||0);
+    const pickup = safeRead('bellaFulfillment','delivery') === 'pickup';
+    const delivery = pickup || subtotal === 0 || subtotal >= 150 ? 0 : 8;
+    const total = subtotal + delivery + tip;
     cartCountEls.forEach(el => el.textContent = count);
     cartTotalEls.forEach(el => el.textContent = money(total));
-    // Atualiza resumo/indicadores existentes sem reescrever o layout original.
-    $$('[data-cart-item]').forEach(item => {
-      const qty = Number(item.dataset.qty || 1);
-      const price = Number(item.dataset.price || 0);
-      const quantity = $('[data-quantity]', item);
-      if (quantity) quantity.textContent = qty;
-    });
+    if (cartItemsHost) {
+      cartItemsHost.replaceChildren();
+      if (!cart.length) {
+        const empty = document.createElement('div'); empty.className = 'rounded-xl p-5 text-center';
+        const title = document.createElement('strong'); title.textContent = 'Sua sacola está vazia';
+        const desc = document.createElement('p'); desc.className = 'mt-1 text-sm opacity-75'; desc.textContent = 'Adicione pizzas e outros produtos pelo cardápio.';
+        const go = document.createElement('button'); go.type='button'; go.className='mt-4 px-4 py-2 rounded-full bg-primary-container text-on-primary-container'; go.textContent='Ver cardápio'; go.onclick=()=>activateTab('cardapio');
+        empty.append(title,desc,go); cartItemsHost.append(empty);
+      } else cart.forEach(item => {
+        const row = document.createElement('article'); row.className='bg-surface-container rounded-xl p-4 flex flex-wrap items-center gap-3';
+        const info=document.createElement('div'); info.className='min-w-0 flex-1';
+        const name=document.createElement('strong'); name.className='block break-words'; name.textContent=item.name;
+        const price=document.createElement('span'); price.className='block mt-1 text-secondary'; price.textContent=money(item.price)+' cada'; info.append(name,price);
+        const controls=document.createElement('div'); controls.className='flex items-center gap-2';
+        [['−','minus','Diminuir'],[String(item.qty),'qty','Quantidade'],['+','plus','Aumentar'],['×','delete','Remover']].forEach(([label,op,aria])=>{
+          const b=document.createElement(op==='qty'?'span':'button'); b.textContent=label; b.setAttribute('aria-label',aria+' '+item.name); b.className='w-8 h-8 inline-flex items-center justify-center rounded-full bg-surface-container-high';
+          if(op!=='qty'){b.type='button';b.dataset.cartOp=op;b.dataset.id=item.id;} controls.append(b);
+        });
+        const line=document.createElement('strong'); line.className='ml-auto'; line.textContent=money(item.price*item.qty); row.append(info,controls,line); cartItemsHost.append(row);
+      });
+    }
+    const summary=cartPanel?.querySelector('[data-live-summary]');
+    if(summary){
+      summary.querySelectorAll('.justify-between').forEach(row=>{
+        const label=row.firstElementChild?.textContent.trim()||''; const val=row.lastElementChild;
+        if(!val)return; if(label.startsWith('Subtotal'))val.textContent=money(subtotal);
+        if(label.includes('Gorjeta'))val.textContent=money(tip);
+        if(label.includes('Taxa de Entrega'))val.textContent=money(delivery);
+        if(label.includes('Cupom')){row.hidden=true;}
+      });
+      const totalEl=summary.querySelector('[data-cart-total]'); if(totalEl)totalEl.textContent=money(total);
+    }
+    cartPanel?.querySelectorAll('button[data-go-cart] .font-headline-sm').forEach(el=>el.textContent=money(total));
+    const itemsLabel=[...(cartPanel?.querySelectorAll('span')||[])].find(el=>/^3 itens$/.test(el.textContent.trim()));
+    if(itemsLabel)itemsLabel.textContent=count+' '+(count===1?'item':'itens');
+    const subLabel=[...(cartPanel?.querySelectorAll('span')||[])].find(el=>/^Subtotal \(3 itens\)$/.test(el.textContent.trim()));
+    if(subLabel)subLabel.textContent='Subtotal ('+count+' '+(count===1?'item':'itens')+')';
     saveCart();
   }
-  function addToCart(name, price = 0) {
-    const existing = cart.find(item => item.name === name);
-    if (existing) existing.qty += 1;
-    else cart.push({ name, price: Number(price) || 0, qty: 1 });
-    renderCart();
-    showToast(`${name} foi adicionado à sacola.`);
+  function addToCart(name, price=0) {
+    name=String(name||'Produto').trim(); price=Math.max(0,Number(price)||0);
+    const found=cart.find(x=>x.name===name && x.price===price);
+    if(found)found.qty++; else cart.push({id:String(Date.now())+'-'+Math.random().toString(36).slice(2,8),name,price,qty:1});
+    renderCart(); showToast(name+' foi adicionado ao carrinho.');
   }
-  window.quickAdd = (button, name) => {
-    const card = button?.closest('[data-product-card], .group, .menu-product-card') || button?.parentElement?.parentElement;
-    const priceText = card?.innerText.match(/R\$\s*([\d.]+,\d{2})/);
-    const price = priceText ? Number(priceText[1].replace(/\./g, '').replace(',', '.')) : 0;
-    button?.classList.add('scale-75');
-    setTimeout(() => button?.classList.remove('scale-75'), 150);
-    addToCart(name, price);
-  };
-  window.addHeroPizza = button => {
-    button?.classList.add('scale-95');
-    setTimeout(() => button?.classList.remove('scale-95'), 150);
-    addToCart('Tartufo & Funghi Selvatici', 89.90);
-  };
-  $$('[data-add-product]').forEach(button => button.addEventListener('click', () => {
-    const card = button.closest('[data-product-card], .menu-product-card, article') || button.parentElement;
-    const priceText = card?.innerText.match(/R\$\s*([\d.]+,\d{2})/);
-    const parsedPrice = priceText ? Number(priceText[1].replace(/\./g, '').replace(',', '.')) : 0;
-    addToCart(button.dataset.addProduct || 'Produto', Number(button.dataset.price || parsedPrice));
-  }));
-  $$('[data-action="plus"]').forEach(button => button.addEventListener('click', () => {
-    const item = button.closest('[data-cart-item]');
-    if (item) { item.dataset.qty = Number(item.dataset.qty || 1) + 1; renderCart(); }
-  }));
-  $$('[data-action="minus"]').forEach(button => button.addEventListener('click', () => {
-    const item = button.closest('[data-cart-item]');
-    if (item) { item.dataset.qty = Math.max(1, Number(item.dataset.qty || 1) - 1); renderCart(); }
-  }));
-  $$('[data-action="delete"]').forEach(button => button.addEventListener('click', () => {
-    const item = button.closest('[data-cart-item]');
-    if (item) { item.remove(); renderCart(); showToast('Item removido da sacola.'); }
-  }));
+  function extractPrice(el) {
+    const card=el?.closest('[data-product-card],.menu-product-card,article') || el?.parentElement?.parentElement;
+    const match=(card?.innerText||'').match(/R\$\s*([\d.]+,\d{2})/);
+    return match?Number(match[1].replace(/\./g,'').replace(',','.')):0;
+  }
+  window.quickAdd=(button,name)=>addToCart(name,extractPrice(button));
+  window.addHeroPizza=()=>addToCart('Tartufo & Funghi Selvatici',89.90);
+  $$('[data-add-product]').forEach(button=>{ if(button.hasAttribute('onclick')) return; button.addEventListener('click',()=>addToCart(button.dataset.addProduct||'Produto',Number(button.dataset.price)||extractPrice(button))); });
+  document.addEventListener('click',event=>{
+    const b=event.target.closest('[data-cart-op]'); if(!b)return;
+    const item=cart.find(x=>x.id===b.dataset.id); if(!item)return;
+    if(b.dataset.cartOp==='plus')item.qty++;
+    if(b.dataset.cartOp==='minus')item.qty--;
+    if(b.dataset.cartOp==='delete'||item.qty<=0)cart=cart.filter(x=>x.id!==item.id);
+    renderCart();
+  });
+  $$('[data-action="plus"]').forEach(button=>{
+    if(button.closest('#live-cart-items'))return;
+    button.addEventListener('click',()=>{
+      const card=button.closest('.bg-surface-container.rounded-xl');
+      const name=card?.querySelector('span.font-title-md,span.font-label-lg')?.textContent.trim() || card?.innerText.match(/\n\s*([^\n]+)\n/)?.[1] || 'Produto';
+      addToCart(name,extractPrice(button));
+    });
+  });
+  // Limpar sacola e finalizar: checkout real precisa de integração de pagamento/servidor.
+  [...(cartPanel?.querySelectorAll('button')||[])].forEach(button=>{
+    const label=(button.innerText||button.getAttribute('aria-label')||'').trim();
+    if(label==='Limpar')button.addEventListener('click',()=>{if(confirm('Deseja remover todos os itens do carrinho?')){cart=[];renderCart();showToast('Carrinho limpo.');}});
+    if(/Ir para Pagamento/.test(label))button.addEventListener('click',()=>{
+      if(!cart.length){showToast('Adicione pelo menos um produto antes de continuar.');activateTab('cardapio');return;}
+      showToast('O pagamento online ainda precisa ser conectado a um serviço de pagamento.');
+    });
+    if(/PIZZA10|Cupom/.test(label))button.addEventListener('click',()=>showToast('Cupons ainda não estão conectados a um sistema de pedidos.'));
+  });
 
   // Personalizador da pizza.
   window.selectFlavor = (name, ingredients, priceDiff, element) => {
