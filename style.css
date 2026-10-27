@@ -866,3 +866,21 @@ input:valid:not(:placeholder-shown) {
 #tab-clube .club-signup {
   margin-bottom: 0;
 }
+
+
+/* Correções de viewport: evitar que endereço e fim das páginas fiquem sob a navegação fixa */
+.site-main { padding-bottom: calc(120px + env(safe-area-inset-bottom, 0px)); }
+.tab-panel { overflow: visible; }
+.address-copy { white-space: normal !important; overflow-wrap: anywhere; text-overflow: clip !important; }
+#tab-carrinho .bg-surface-container.rounded-xl.p-space-md.flex.items-start { align-items: flex-start; flex-wrap: wrap; }
+#tab-carrinho .bg-surface-container.rounded-xl.p-space-md.flex.items-start > div { flex: 1 1 220px; }
+#tab-carrinho .bg-surface-container.rounded-xl.p-space-md.flex.items-start > button { margin-left: auto; }
+#tab-cardapio .filtered-out { display: none !important; }
+#tab-cardapio .menu-product-card { min-width: 0; max-width: 100%; }
+#tab-cardapio .menu-product-card h3, #tab-cardapio .menu-product-card p { overflow-wrap: anywhere; }
+@media (max-width: 520px) {
+  .site-main { padding-left: 12px; padding-right: 12px; padding-bottom: calc(132px + env(safe-area-inset-bottom, 0px)); }
+  #tab-carrinho .bg-surface-container.rounded-xl.p-space-md.flex.items-start { gap: 10px; }
+  #tab-carrinho .bg-surface-container.rounded-xl.p-space-md.flex.items-start > button { max-width: 100%; }
+  #tab-cardapio .menu-product-card { gap: 10px; }
+}

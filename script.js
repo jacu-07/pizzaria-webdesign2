@@ -61,42 +61,53 @@
     b.addEventListener('click', () => showToast('Endereço demonstrativo. Configure seu endereço na etapa de entrega.'));
   });
 
-  // Cardápio: pesquisa e filtros por categoria.
+  // Cardápio: pesquisa unificada e filtros por categoria.
   const searchInput = $('#menu-search');
   const filterButtons = $$('.menu-filter');
-  const productCards = $$('[data-product-card]');
+  const productCards = $$('#tab-cardapio [data-product-card]');
+  const extraSearch = $$('#tab-cardapio input[type="search"], #tab-cardapio input[type="text"]')
+    .filter(input => input !== searchInput);
   let activeFilter = 'todos';
   function filterMenu() {
-    const query = (searchInput?.value || '').trim().toLocaleLowerCase('pt-BR');
+    const query = ([searchInput, ...extraSearch].map(input => (input?.value || '').trim()).find(Boolean) || '').toLocaleLowerCase('pt-BR');
     productCards.forEach(card => {
       const text = card.textContent.toLocaleLowerCase('pt-BR');
       const category = card.dataset.category || 'todos';
-      card.classList.toggle('filtered-out', Boolean(query && !text.includes(query)) ||
-        (activeFilter !== 'todos' && category !== activeFilter));
+      const matchesText = !query || text.includes(query);
+      card.classList.toggle('filtered-out', !matchesText || (activeFilter !== 'todos' && category !== activeFilter));
     });
   }
-  searchInput?.addEventListener('input', filterMenu);
+  const searchFields = [searchInput, ...extraSearch].filter(Boolean);
+  searchFields.forEach(input => input.addEventListener('input', () => {
+    searchFields.forEach(other => { if (other !== input) other.value = input.value; });
+    filterMenu();
+  }));
   filterButtons.forEach(button => button.addEventListener('click', () => {
     activeFilter = button.dataset.filter || 'todos';
     filterButtons.forEach(b => b.classList.toggle('filter-active', b === button));
     filterMenu();
   }));
-  // Busca adicional do cardápio (se presente no layout).
-  const extraSearch = $$('#tab-cardapio input[type="search"], #tab-cardapio input[type="text"]')
-    .filter(input => input !== searchInput);
-  extraSearch.forEach(input => input.addEventListener('input', () => {
-    const query = input.value.trim().toLocaleLowerCase('pt-BR');
-    productCards.forEach(card => {
-      const text = card.textContent.toLocaleLowerCase('pt-BR');
-      card.classList.toggle('filtered-out', Boolean(query && !text.includes(query)) ||
-        (activeFilter !== 'todos' && (card.dataset.category || 'todos') !== activeFilter));
+  // As abas de categoria que ficam sobre os produtos também aplicam os filtros.
+  $$('#tab-cardapio .sticky.top-20 button').forEach(button => button.addEventListener('click', () => {
+    const label = button.textContent.toLocaleLowerCase('pt-BR');
+    activeFilter = label.includes('calzone') || label.includes('entrada') ? 'entrada'
+      : label.includes('sobremesa') ? 'doce'
+      : label.includes('bebida') || label.includes('vinho') ? 'bebida'
+      : label.includes('pizza') ? 'pizza' : 'todos';
+    filterButtons.forEach(b => b.classList.toggle('filter-active', (b.dataset.filter || 'todos') === activeFilter));
+    searchFields.forEach(input => input.value = '');
+    filterMenu();
+    button.parentElement?.querySelectorAll('button').forEach(b => {
+      b.classList.toggle('text-secondary', b === button);
+      b.classList.toggle('border-secondary', b === button);
+      b.classList.toggle('font-bold', b === button);
     });
   }));
 
   // Carrinho funcional, com itens dinâmicos e persistência local.
   let cart = safeRead('bellaMassaCart', []);
   if (!Array.isArray(cart)) cart = [];
-  cart = cart.filter(x => x && typeof x.name === 'string' && !['Pizza Meio a Meio','Tartufo & Funghi','Tartufo & Funghi Selvatici','Coca-Cola Zero'].includes(x.name.trim())).map((x, i) => ({id:x.id || String(Date.now()+i), name:x.name, price:Math.max(0,Number(x.price)||0), qty:Math.max(1,Number(x.qty)||1)}));
+  cart = cart.filter(x => x && typeof x.name === 'string' && !['Pizza Meio a Meio','Pizza personalizada','Tartufo & Funghi','Tartufo & Funghi Selvatici','Coca-Cola Zero'].includes(x.name.trim())).map((x, i) => ({id:x.id || String(Date.now()+i), name:x.name, price:Math.max(0,Number(x.price)||0), qty:Math.max(1,Number(x.qty)||1)}));
   const cartCountEls = $$('[data-cart-count]'), cartTotalEls = $$('[data-cart-total]');
   const cartPanel = $('#tab-carrinho');
   const orderHeading = cartPanel && [...cartPanel.querySelectorAll('*')].find(el => el.children.length === 0 && el.textContent.trim() === 'Seu Pedido');
@@ -189,7 +200,7 @@
   }
   window.quickAdd=(button,name)=>addToCart(name,extractPrice(button));
   window.addHeroPizza=()=>addToCart('Tartufo & Funghi Selvatici',89.90);
-  $$('[data-add-product]').forEach(button=>{ if(button.hasAttribute('onclick')) return; button.addEventListener('click',()=>addToCart(button.dataset.addProduct||'Produto',Number(button.dataset.price)||extractPrice(button))); });
+  $$('[data-add-product]').forEach(button=>{ if(button.hasAttribute('onclick') || button.hasAttribute('data-builder-submit')) return; button.addEventListener('click',()=>addToCart(button.dataset.addProduct||'Produto',Number(button.dataset.price)||extractPrice(button))); });
   document.addEventListener('click',event=>{
     const b=event.target.closest('[data-cart-op]'); if(!b)return;
     const item=cart.find(x=>x.id===b.dataset.id); if(!item)return;
