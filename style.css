@@ -787,3 +787,28 @@ input:valid:not(:placeholder-shown) {
   #tab-pizza .sticky.bottom-0 .items-center.justify-between.gap-space-sm { align-items: stretch; flex-direction: column; }
   #tab-pizza button[data-add-product="Pizza personalizada"] { width: 100%; justify-content: center; }
 }
+
+
+/* Assistente por etapas do personalizador de pizza */
+.builder-wizard-nav { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 8px; }
+.builder-step-tab { min-width: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px; padding: 10px 4px; border: 1px solid var(--bm-border); border-radius: 14px; color: var(--bm-muted); background: var(--bm-surface); font: inherit; font-size: 12px; font-weight: 700; cursor: pointer; transition: background var(--bm-transition), color var(--bm-transition), border-color var(--bm-transition), transform var(--bm-transition); }
+.builder-step-tab:hover { transform: translateY(-1px); }
+.builder-step-tab.is-active { color: #fff; background: var(--bm-primary); border-color: var(--bm-primary); }
+.builder-step-number { width: 28px; height: 28px; display: grid; place-items: center; border-radius: 50%; background: rgba(255,255,255,.12); font-size: 13px; }
+.builder-step-tab.is-active .builder-step-number { background: rgba(255,255,255,.2); }
+.builder-step-content { min-width: 0; }
+.builder-step-panel { min-width: 0; padding: 18px; margin: 0 0 18px; border: 1px solid var(--bm-border); border-radius: var(--bm-radius); background: var(--bm-surface); }
+.builder-step-panel[hidden] { display: none !important; }
+.builder-step-heading { margin-bottom: 16px; }
+.builder-step-heading h2 { margin: 0 0 5px; color: var(--bm-text); font-size: clamp(18px, 2.5vw, 24px); line-height: 1.25; }
+.builder-step-heading p { margin: 0; color: var(--bm-muted); font-size: 14px; line-height: 1.5; }
+.builder-step-panel .pizza-size-options { margin-top: 0; }
+.builder-step-panel > .flex.flex-col { width: 100%; }
+.builder-step-panel [data-builder-flavor] { min-width: 0; }
+.builder-step-panel [data-builder-flavor] img { max-width: 100%; }
+@media (max-width: 520px) {
+  .builder-wizard-nav { gap: 5px; padding-left: 12px; padding-right: 12px; }
+  .builder-step-tab { padding: 8px 2px; border-radius: 10px; font-size: 10px; gap: 4px; }
+  .builder-step-number { width: 24px; height: 24px; font-size: 12px; }
+  .builder-step-panel { padding: 13px; }
+}

@@ -517,41 +517,13 @@
 <p>Personalize sua pizza do seu jeito.</p>
 </div>
 <div class="flex flex-col w-full pb-20">
-<!-- WIZARD STEPPER -->
-<div class="px-margin pt-space-sm pb-space-md">
-<div class="flex items-center justify-between gap-space-xs relative">
-<!-- Step 1 -->
-<button class="flex flex-col items-center gap-1 group focus:outline-none">
-<div class="w-8 h-8 rounded-full bg-primary-container text-on-primary-container flex items-center justify-center shadow-md shadow-primary-container/30 ring-0">
-<span class="font-label-sm text-label-sm font-bold">1</span>
-</div>
-<span class="font-label-sm text-label-sm text-primary text-center truncate w-full">Divisão</span>
-</button>
-<div class="h-0.5 bg-primary-container/40 rounded-full mb-3"></div>
-<!-- Step 2 -->
-<button class="flex flex-col items-center gap-1 group focus:outline-none">
-<div class="w-8 h-8 rounded-full bg-surface-container-high text-secondary flex items-center justify-center">
-<span class="font-label-sm text-label-sm font-bold">2</span>
-</div>
-<span class="font-label-sm text-label-sm text-on-surface-variant text-center truncate w-full">Massa</span>
-</button>
-<div class="h-0.5 bg-surface-container-highest rounded-full mb-3"></div>
-<!-- Step 3 -->
-<button class="flex flex-col items-center gap-1 group focus:outline-none">
-<div class="w-8 h-8 rounded-full bg-surface-container-high text-on-surface-variant flex items-center justify-center">
-<span class="font-label-sm text-label-sm font-bold">3</span>
-</div>
-<span class="font-label-sm text-label-sm text-on-surface-variant text-center truncate w-full">Borda</span>
-</button>
-<div class="h-0.5 bg-surface-container-highest rounded-full mb-3"></div>
-<!-- Step 4 -->
-<button class="flex flex-col items-center gap-1 group focus:outline-none">
-<div class="w-8 h-8 rounded-full bg-surface-container-high text-on-surface-variant flex items-center justify-center">
-<span class="font-label-sm text-label-sm font-bold">4</span>
-</div>
-<span class="font-label-sm text-label-sm text-on-surface-variant text-center truncate w-full">Sabores</span>
-</button>
-</div>
+<!-- WIZARD STEPPER: uma aba por etapa -->
+<div class="builder-wizard-nav px-margin pt-space-sm pb-space-md" role="tablist" aria-label="Etapas de montagem da pizza">
+  <button type="button" class="builder-step-tab is-active" data-builder-step="0" role="tab" aria-selected="true"><span class="builder-step-number">1</span><span>Tamanho</span></button>
+  <button type="button" class="builder-step-tab" data-builder-step="1" role="tab" aria-selected="false"><span class="builder-step-number">2</span><span>Divisão</span></button>
+  <button type="button" class="builder-step-tab" data-builder-step="2" role="tab" aria-selected="false"><span class="builder-step-number">3</span><span>Sabores</span></button>
+  <button type="button" class="builder-step-tab" data-builder-step="3" role="tab" aria-selected="false"><span class="builder-step-number">4</span><span>Massa</span></button>
+  <button type="button" class="builder-step-tab" data-builder-step="4" role="tab" aria-selected="false"><span class="builder-step-number">5</span><span>Borda</span></button>
 </div>
 <!-- LIVE PIZZA SIMULATOR CARD -->
 <div class="px-margin mb-space-lg">
@@ -623,6 +595,7 @@
 </div>
 </div>
 </div>
+<div id="builder-step-content" class="builder-step-content px-margin" aria-live="polite"></div>
 <!-- BUILDER CONFIGURATION ACCORDIONS / SECTIONS -->
 <div class="flex flex-col gap-space-md px-margin">
 <!-- 1. DIVISÃO DA PIZZA -->
@@ -639,7 +612,7 @@
 <button class="py-2.5 px-2 rounded-full text-center bg-primary-container text-on-primary-container shadow-md transition-all" type="button" data-pizza-mode="meio" aria-pressed="true">
 <span class="font-label-sm text-label-sm font-bold block truncate">Meio a Meio</span>
 </button>
-<button class="py-2.5 px-2 rounded-full text-center text-on-surface-variant hover:text-on-surface transition-all flex flex-col items-center justify-center" type="button">
+<button class="py-2.5 px-2 rounded-full text-center text-on-surface-variant hover:text-on-surface transition-all flex flex-col items-center justify-center" type="button" data-pizza-mode="estacoes" aria-pressed="false">
 <span class="font-label-sm text-label-sm block truncate">4 Estações</span>
 </button>
 </div>
@@ -740,8 +713,8 @@
 </div>
 <!-- Sabor Cards List -->
 <div class="flex flex-col gap-space-xs">
-<!-- Flavor 1 (Active Selected: Diavola) -->
-<div class="bg-surface-container p-space-sm rounded-xl flex items-center justify-between gap-space-sm shadow-md cursor-pointer group" data-builder-flavor="Diavola Artesanal" data-builder-price="37" role="button" tabindex="0" aria-pressed="true" onclick="selectFlavor('Diavola Artesanal', 'Salame picante artesanal, fior di latte, pepperoncino', '+R$ 37,00', this)">
+<!-- Flavor 1 -->
+<div class="bg-surface-container p-space-sm rounded-xl flex items-center justify-between gap-space-sm shadow-md cursor-pointer group" data-builder-flavor="Diavola Artesanal" data-builder-price="37" role="button" tabindex="0" aria-pressed="false" onclick="selectFlavor('Diavola Artesanal', 'Salame picante artesanal, fior di latte, pepperoncino', '+R$ 37,00', this)">
 <div class="flex items-center gap-space-sm min-w-0">
 <div class="w-14 h-14 rounded-lg overflow-hidden shrink-0 bg-surface-container-highest">
 <img class="w-full h-full object-cover" data-alt="Rustic close-up of a Diavola pizza slice with curled crispy artisanal spicy salami, hot chili flakes, molten cheese and dark charred Neapolitan oven-baked spots on crust." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCrlvECzsWlWdFjituQ_JOrIo7dQjxla8nUGlYereUZSb3X_oAlD_qjy0ZnFHkk46Jrt_IcawXS34HKCjWOvAzXRdvLD8iqnldon0NAZXkafb7db9sfW9Om11eYXVitZNtUfNU52GOW-SLWT9i4zt961g__sv7VnSKJSWusEgXxcI3X_ORd_ve3nZJCODjbVVN3pKkcH831IzIFv9fOeErHaetOKqNjWw1DN34U7ebiYTMtJPdp0k1q"/>
@@ -795,6 +768,18 @@
 </div>
 </div>
 </div>
+<!-- Flavor 4: Margherita Verace -->
+<div class="bg-surface-container-low p-space-sm rounded-xl flex items-center justify-between gap-space-sm shadow-sm cursor-pointer group hover:bg-surface-container" data-builder-flavor="Margherita Verace" data-builder-price="32.5" role="button" tabindex="0" aria-pressed="false" onclick="selectFlavor('Margherita Verace', 'Tomate San Marzano, fior di latte e manjericão fresco', '+R$ 32,50', this)">
+  <div class="flex items-center gap-space-sm min-w-0">
+    <div class="w-14 h-14 rounded-lg overflow-hidden shrink-0 bg-surface-container-highest flex items-center justify-center"><span class="material-symbols-outlined text-secondary text-2xl">local_pizza</span></div>
+    <div class="flex flex-col min-w-0">
+      <span class="font-title-md text-title-md text-on-surface font-semibold truncate">Margherita Verace</span>
+      <span class="font-body-sm text-body-sm text-on-surface-variant line-clamp-1">Tomate San Marzano, fior di latte e manjericão fresco</span>
+      <span class="font-label-sm text-label-sm text-on-surface-variant font-bold mt-0.5">+R$ 32,50</span>
+    </div>
+  </div>
+  <div class="w-6 h-6 rounded-full bg-surface-container-high text-on-surface-variant flex items-center justify-center shrink-0"><span class="material-symbols-outlined text-[16px]">add</span></div>
+</div>
 </div>
 <!-- Extra Chef's Touch Accordion -->
 <div class="bg-surface-container-low rounded-xl p-space-sm flex items-center justify-between shadow-sm cursor-pointer mt-space-xs">
@@ -825,7 +810,7 @@
 <span class="font-label-sm text-label-sm text-on-surface-variant leading-none">Preço Total</span>
 <span class="font-headline-md text-headline-md text-on-surface font-bold leading-tight" id="bottom-total-price">R$ 78,50</span><span class="sr-only" id="pizza-total-price">R$ 78,50</span>
 </div>
-<button class="bg-primary-container text-on-primary-container h-13 px-gutter py-3 rounded-full flex items-center justify-center gap-2 shadow-lg shadow-primary-container/40 active:scale-95 transition-transform" data-add-product="Pizza personalizada" data-go-cart="true" onclick="handleAddPizza()">
+<button class="bg-primary-container text-on-primary-container h-13 px-gutter py-3 rounded-full flex items-center justify-center gap-2 shadow-lg shadow-primary-container/40 active:scale-95 transition-transform" data-add-product="Pizza personalizada" data-go-cart="true" data-builder-submit="true">
 <span class="material-symbols-outlined text-[20px]">local_pizza</span>
 <span class="font-label-lg text-label-lg font-bold">Adicionar ao Pedido</span>
 </button>

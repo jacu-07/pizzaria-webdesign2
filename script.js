@@ -222,7 +222,7 @@
   const builderState = {
     size: 'grande',
     mode: 'meio',
-    flavors: [{ name: 'Diavola Artesanal', ingredients: 'Salame picante artesanal, fior di latte, pepperoncino', price: 37 }]
+    flavors: []
   };
   const builderMoney = value => money(value);
   const sizePrices = { media: 32.50, grande: 41.50 };
@@ -249,6 +249,7 @@
     if (!builder) return;
     const isSingle = builderState.mode === 'unico';
     const isStations = builderState.mode === 'estacoes';
+    const maxFlavors = isSingle ? 1 : isStations ? 4 : 2;
     const sideB = $('#pizza-side-b-layer');
     const sideBSummary = $('#card-b-summary');
     if (sideB) sideB.style.display = isSingle ? 'none' : 'flex';
@@ -258,17 +259,17 @@
     const title = $('#preview-b-title');
     const sideName = $('#side-b-name');
     const sideIngredients = $('#side-b-ingredients');
-    if (title) title.textContent = isStations ? `${selectedNames.length}/3 sabores` : mainFlavor.name.split(' ')[0];
-    if (sideName) sideName.textContent = isStations ? (selectedNames.join(', ') || 'Escolha os sabores') : mainFlavor.name;
-    if (sideIngredients) sideIngredients.textContent = isStations ? 'Margherita + sabores selecionados' : mainFlavor.ingredients;
+    if (title) title.textContent = `${selectedNames.length}/${maxFlavors} sabores`;
+    if (sideName) sideName.textContent = selectedNames.length ? selectedNames.join(' + ') : 'Escolha os sabores';
+    if (sideIngredients) sideIngredients.textContent = builderState.flavors.map(f => f.ingredients).filter(Boolean).join(' • ') || 'Selecione os sabores abaixo';
     const sideALabel = $('#tab-pizza .grid.grid-cols-2 p.font-headline-sm');
     const sideAIngredients = sideALabel?.nextElementSibling;
     if (isSingle && sideALabel) {
       sideALabel.textContent = mainFlavor.name;
       if (sideAIngredients) sideAIngredients.textContent = mainFlavor.ingredients;
     } else if (sideALabel) {
-      sideALabel.textContent = 'Margherita';
-      if (sideAIngredients) sideAIngredients.textContent = 'San Marzano, Fior di Latte';
+      sideALabel.textContent = selectedNames[0] || 'Sabor 1';
+      if (sideAIngredients) sideAIngredients.textContent = builderState.flavors[0]?.ingredients || 'Primeiro sabor selecionado';
     }
     flavorCards().forEach(card => {
       const name = card.dataset.builderFlavor;
@@ -309,21 +310,23 @@
       composition.textContent = `${sizeNames[builderState.size]} · ${modeName} · ${dough}${edge ? ` · ${edge}` : ''}`;
     }
     const modeHelp = builder.querySelector('[data-builder-help]');
-    if (modeHelp) modeHelp.textContent = isStations ? 'Selecione até 3 sabores além da Margherita.' : isSingle ? 'Selecione um sabor para a pizza inteira.' : 'Margherita de um lado e um sabor do outro.';
+    if (modeHelp) modeHelp.textContent = isStations ? `Selecione 4 sabores (${selectedNames.length}/4 escolhidos).` : isSingle ? `Selecione 1 sabor (${selectedNames.length}/1 escolhido).` : `Selecione 2 sabores (${selectedNames.length}/2 escolhidos).`;
   }
   window.selectFlavor = (name, ingredients, priceDiff, element) => {
     const price = Number(String(priceDiff || element?.dataset.builderPrice || '0').replace(/[^0-9,.-]/g, '').replace(',', '.')) || Number(element?.dataset.builderPrice) || 0;
     const flavor = { name: String(name).replace(/&amp;/g, '&'), ingredients, price };
     const existing = builderState.flavors.findIndex(f => f.name === flavor.name);
-    if (builderState.mode === 'estacoes') {
-      if (existing >= 0) builderState.flavors.splice(existing, 1);
-      else if (builderState.flavors.length < 3) builderState.flavors.push(flavor);
-      else showToast('No modo 4 Estações, selecione no máximo 3 sabores além da Margherita.');
+    const maxFlavors = builderState.mode === 'unico' ? 1 : builderState.mode === 'estacoes' ? 4 : 2;
+    if (existing >= 0) {
+      builderState.flavors.splice(existing, 1);
+    } else if (builderState.flavors.length < maxFlavors) {
+      builderState.flavors.push(flavor);
     } else {
-      builderState.flavors = [flavor];
+      showToast(`Nesta divisão, escolha no máximo ${maxFlavors} sabor${maxFlavors > 1 ? 'es' : ''}.`);
+      return;
     }
     renderBuilder();
-    showToast(builderState.mode === 'estacoes' ? 'Seleção de sabores atualizada.' : `Sabor ${flavor.name} selecionado.`);
+    showToast(`Sabores selecionados: ${builderState.flavors.length}/${maxFlavors}.`);
   };
   $$('[data-pizza-size]', builder).forEach(button => {
     button.addEventListener('click', () => { builderState.size = button.dataset.pizzaSize; renderBuilder(); });
@@ -332,8 +335,8 @@
   $$('[data-pizza-mode]', builder).forEach(button => {
     button.addEventListener('click', () => {
       builderState.mode = button.dataset.pizzaMode;
-      if (builderState.mode !== 'estacoes' && builderState.flavors.length > 1) builderState.flavors = [builderState.flavors[0]];
-      if (!builderState.flavors.length) builderState.flavors = [{ name: 'Diavola Artesanal', ingredients: 'Salame picante artesanal, fior di latte, pepperoncino', price: 37 }];
+      const maxFlavors = builderState.mode === 'unico' ? 1 : builderState.mode === 'estacoes' ? 4 : 2;
+      if (builderState.flavors.length > maxFlavors) builderState.flavors = builderState.flavors.slice(0, maxFlavors);
       renderBuilder();
       showToast(`Divisão selecionada: ${button.innerText.trim()}.`);
     });
@@ -347,21 +350,100 @@
   $$('input[name="crust-dough"], input[name="crust-edge"]', builder || document).forEach(input => {
     input.addEventListener('change', renderBuilder);
   });
-  const stepTargets = [
-    builder?.querySelector('.pizza-mode-options'),
-    [...(builder?.querySelectorAll('.flex.flex-col.gap-space-xs.mt-space-xs') || [])][0],
-    [...(builder?.querySelectorAll('.flex.flex-col.gap-space-xs.mt-space-xs') || [])][1],
-    flavorCards()[0]?.parentElement
+  // Wizard real: cada etapa mostra somente os controles correspondentes.
+  const wizardContent = $('#builder-step-content', builder || document);
+  const wizardTabs = $$('.builder-step-tab', builder || document);
+  const sizeOptions = $('.pizza-size-options', builder || document);
+  const modeGroup = $('.pizza-mode-options', builder || document)?.parentElement;
+  const doughInput = $('input[name="crust-dough"]', builder || document);
+  const edgeInput = $('input[name="crust-edge"]', builder || document);
+  const findOptionSection = input => {
+    let node = input;
+    while (node && node !== builder) {
+      if (node.matches?.('div.flex.flex-col.gap-space-xs.mt-space-xs') && node.querySelector('input')) return node;
+      node = node.parentElement;
+    }
+    return null;
+  };
+  const doughGroup = findOptionSection(doughInput);
+  const edgeGroup = findOptionSection(edgeInput);
+  const flavorGroup = flavorCards()[0]?.parentElement?.parentElement;
+  const wizardSteps = [
+    { title: 'Escolha o tamanho', description: 'Defina o tamanho ideal para sua fome.', node: sizeOptions },
+    { title: 'Como dividir a pizza?', description: 'Escolha pizza inteira, meio a meio ou quatro estações.', node: modeGroup },
+    { title: 'Escolha os sabores', description: 'Selecione o sabor ou os sabores da sua pizza.', node: flavorGroup },
+    { title: 'Escolha a massa', description: 'Selecione a massa que combina com seu pedido.', node: doughGroup },
+    { title: 'Escolha a borda', description: 'Finalize com a borda que você mais gosta.', node: edgeGroup }
   ];
-  $$('#tab-pizza .px-margin.pt-space-sm.pb-space-md button').forEach((button, index) => {
-    button.addEventListener('click', () => {
-      stepTargets[index]?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  let activeBuilderStep = 0;
+  const originalConfig = modeGroup?.parentElement;
+  const finalization = originalConfig?.querySelector('.bg-surface-container-low.rounded-xl.p-space-sm.flex.items-center.justify-between.shadow-sm.cursor-pointer');
+  if (wizardContent) {
+    wizardContent.innerHTML = '';
+    wizardSteps.forEach((step, index) => {
+      const panel = document.createElement('section');
+      panel.className = 'builder-step-panel' + (index === 0 ? ' is-active' : '');
+      panel.dataset.builderPanel = String(index);
+      panel.setAttribute('role', 'tabpanel');
+      const heading = document.createElement('div');
+      heading.className = 'builder-step-heading';
+      const title = document.createElement('h2'); title.textContent = step.title;
+      const description = document.createElement('p'); description.textContent = step.description;
+      heading.append(title, description);
+      panel.appendChild(heading);
+      if (step.node) panel.appendChild(step.node);
+      else panel.appendChild(document.createTextNode('Não foi possível carregar esta etapa.'));
+      wizardContent.appendChild(panel);
     });
+    // Remove the now-empty original configuration container, but preserve the sticky price/action summary.
+    if (modeGroup && doughGroup && edgeGroup && flavorGroup) {
+      const flavorPanel = $('[data-builder-panel="2"]', wizardContent);
+      if (finalization && flavorPanel) flavorPanel.appendChild(finalization);
+      // Preserve only the sticky price/action summary; remove empty wrappers to avoid blank space.
+      if (originalConfig) {
+        [...originalConfig.children].forEach(child => {
+          if (child.classList.contains('sticky') || child.querySelector?.('.sticky')) return;
+          if (!child.contains?.(modeGroup) && !child.contains?.(doughGroup) && !child.contains?.(edgeGroup) && !child.contains?.(flavorGroup)) child.remove();
+        });
+        originalConfig.style.gap = '0';
+      }
+    }
+  }
+  function showBuilderStep(index, scroll = true) {
+    activeBuilderStep = Math.max(0, Math.min(wizardSteps.length - 1, index));
+    $$('.builder-step-panel', wizardContent || builder).forEach((panel, i) => {
+      const active = i === activeBuilderStep;
+      panel.classList.toggle('is-active', active);
+      panel.hidden = !active;
+    });
+    wizardTabs.forEach((tab, i) => {
+      const active = i === activeBuilderStep;
+      tab.classList.toggle('is-active', active);
+      tab.setAttribute('aria-selected', String(active));
+      tab.tabIndex = active ? 0 : -1;
+    });
+    const submit = $('[data-builder-submit]', builder);
+    if (submit) {
+      const label = submit.querySelector('.font-label-lg');
+      if (label) label.textContent = activeBuilderStep === wizardSteps.length - 1 ? 'Adicionar ao Pedido' : 'Próxima etapa';
+      const icon = submit.querySelector('.material-symbols-outlined');
+      if (icon) icon.textContent = activeBuilderStep === wizardSteps.length - 1 ? 'local_pizza' : 'arrow_forward';
+    }
+    if (scroll) builder?.querySelector('.builder-wizard-nav')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+  wizardTabs.forEach((tab, index) => tab.addEventListener('click', () => showBuilderStep(index)));
+  const builderSubmit = $('[data-builder-submit]', builder || document);
+  builderSubmit?.addEventListener('click', event => {
+    event.preventDefault();
+    if (activeBuilderStep < wizardSteps.length - 1) showBuilderStep(activeBuilderStep + 1);
+    else window.handleAddPizza();
   });
+  showBuilderStep(0, false);
   window.handleAddPizza = () => {
-    if (!builderState.flavors.length) { showToast('Escolha pelo menos um sabor para sua pizza.'); return; }
+    const requiredFlavors = builderState.mode === 'unico' ? 1 : builderState.mode === 'estacoes' ? 4 : 2;
+    if (builderState.flavors.length !== requiredFlavors) { showToast(`Escolha ${requiredFlavors} sabor${requiredFlavors > 1 ? 'es' : ''} antes de adicionar a pizza (${builderState.flavors.length}/${requiredFlavors}).`); showBuilderStep(2); return; }
     const modeName = builderState.mode === 'unico' ? 'Inteira' : builderState.mode === 'estacoes' ? '4 Estações' : 'Meio a Meio';
-    const flavors = builderState.mode === 'unico' ? builderState.flavors[0].name : `Margherita + ${builderState.flavors.map(f => f.name).join(' + ')}`;
+    const flavors = builderState.flavors.map(f => f.name).join(' + ');
     const dough = selectedRadioName('crust-dough');
     const edge = selectedRadioName('crust-edge');
     const description = `${sizeNames[builderState.size]} ${modeName} — ${flavors} — ${dough} — ${edge}`;
