@@ -893,3 +893,11 @@ input:valid:not(:placeholder-shown) {
 #app-main .tab-panel > :first-child { margin-top: 0; }
 #tab-clube, #tab-carrinho { min-height: 0 !important; height: auto !important; }
 @media (max-width: 640px) { #app-main.site-main { padding-top: 88px; padding-bottom: calc(112px + env(safe-area-inset-bottom, 0px)); } }
+
+
+/* Correção definitiva: não deixar painéis ocultos por regras antigas ou estilos do template. */
+#app-main.site-main { padding-top: 24px !important; min-height: 0 !important; height: auto !important; }
+#app-main .tab-panel { display: none !important; min-height: 0 !important; height: auto !important; visibility: hidden !important; }
+#app-main .tab-panel.active { display: block !important; visibility: visible !important; opacity: 1 !important; transform: none !important; }
+#app-main .tab-panel.active > :first-child { margin-top: 0 !important; }
+@media (max-width: 640px) { #app-main.site-main { padding-top: 16px !important; padding-bottom: calc(112px + env(safe-area-inset-bottom, 0px)) !important; } }

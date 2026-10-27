@@ -1181,5 +1181,51 @@
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', showPanelFromHash);
   else showPanelFromHash();
 })();
+</script>
+<script>
+/* Fallback de navegação para garantir que a aba do endereço sempre apareça. */
+(function () {
+  const names = ['inicio', 'cardapio', 'pizza', 'carrinho', 'clube'];
+  function renderCurrentPanel() {
+    const hash = (location.hash || '#inicio').slice(1);
+    const aliases = { 'home-feed': 'inicio', 'monte-a-sua': 'pizza', 'clube-fidelidade': 'clube' };
+    const current = aliases[hash] || (names.includes(hash) ? hash : 'inicio');
+    const main = document.getElementById('app-main');
+    if (main) {
+      main.style.setProperty('padding-top', '24px', 'important');
+      main.style.setProperty('min-height', '0', 'important');
+      main.style.setProperty('height', 'auto', 'important');
+    }
+    document.querySelectorAll('#app-main .tab-panel[data-panel]').forEach(panel => {
+      const active = panel.dataset.panel === current;
+      panel.classList.toggle('active', active);
+      panel.setAttribute('aria-hidden', String(!active));
+      panel.style.setProperty('display', active ? 'block' : 'none', 'important');
+      panel.style.setProperty('visibility', active ? 'visible' : 'hidden', 'important');
+      panel.style.setProperty('opacity', active ? '1' : '0', 'important');
+      panel.style.setProperty('transform', 'none', 'important');
+      panel.style.setProperty('min-height', '0', 'important');
+      panel.style.setProperty('height', 'auto', 'important');
+    });
+    document.querySelectorAll('[data-tab]').forEach(button => {
+      const active = button.dataset.tab === current;
+      button.classList.toggle('active', active);
+      button.setAttribute('aria-pressed', String(active));
+    });
+    document.body.dataset.currentTab = current;
+  }
+  document.addEventListener('click', event => {
+    const button = event.target.closest('[data-tab]');
+    if (!button) return;
+    const target = button.dataset.tab;
+    if (!names.includes(target)) return;
+    if (location.hash !== '#' + target) history.replaceState(null, '', '#' + target);
+    renderCurrentPanel();
+    window.scrollTo(0, 0);
+  }, true);
+  window.addEventListener('hashchange', renderCurrentPanel);
+  document.addEventListener('DOMContentLoaded', renderCurrentPanel);
+  renderCurrentPanel();
+})();
 </script></body>
 </html>
