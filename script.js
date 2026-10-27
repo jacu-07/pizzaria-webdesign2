@@ -28,15 +28,19 @@
   window.showToast = showToast;
   window.triggerToast = showToast;
 
-  // Navegação entre abas/painéis.
-  const panels = $$('.tab-panel');
+  // Navegação única entre abas: controla painel, botão e URL no mesmo lugar.
+  const panels = $$('.tab-panel[data-panel]');
   const tabButtons = $$('[data-tab]');
-  function activateTab(name, updateHash = true) {
+  const tabAliases = { 'home-feed': 'inicio', 'monte-a-sua': 'pizza', 'clube-fidelidade': 'clube' };
+  function activateTab(requestedName, updateHash = true) {
+    let name = tabAliases[requestedName] || requestedName;
     if (!panels.some(panel => panel.dataset.panel === name)) name = 'inicio';
     panels.forEach(panel => {
       const active = panel.dataset.panel === name;
       panel.classList.toggle('active', active);
       panel.setAttribute('aria-hidden', String(!active));
+      panel.style.display = active ? 'block' : 'none';
+      panel.style.visibility = active ? 'visible' : 'hidden';
     });
     tabButtons.forEach(button => {
       const active = button.dataset.tab === name;
@@ -44,17 +48,17 @@
       if (active) button.setAttribute('aria-current', 'page');
       else button.removeAttribute('aria-current');
     });
-    if (updateHash) history.replaceState(null, '', `#${name}`);
     document.body.dataset.currentTab = name;
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    if (updateHash && location.hash !== '#' + name) history.replaceState(null, '', '#' + name);
+    window.scrollTo({ top: 0, behavior: 'auto' });
   }
   window.activateTab = activateTab;
   tabButtons.forEach(button => button.addEventListener('click', () => activateTab(button.dataset.tab)));
   $$('[data-go-tab]').forEach(el => el.addEventListener('click', () => activateTab(el.dataset.goTab)));
   $$('[data-go-cart]').filter(el => !el.hasAttribute('data-builder-submit')).forEach(el => el.addEventListener('click', () => activateTab('carrinho')));
-  const initialTab = location.hash.slice(1);
-  activateTab(panels.some(p => p.dataset.panel === initialTab) ? initialTab : 'inicio', false);
-  window.addEventListener('hashchange', () => activateTab(location.hash.slice(1), false));
+  const initialTab = (location.hash || '#inicio').slice(1);
+  activateTab(initialTab, false);
+  window.addEventListener('hashchange', () => activateTab((location.hash || '#inicio').slice(1), false));
 
   $('#notification-button')?.addEventListener('click', () => showToast('Você não tem novas notificações.'));
   $$('header button').filter(b => !b.id && /Rua Oscar Freire|30-40 min/.test(b.textContent)).forEach(b => {
