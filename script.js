@@ -96,22 +96,28 @@
   // Carrinho funcional, com itens dinâmicos e persistência local.
   let cart = safeRead('bellaMassaCart', []);
   if (!Array.isArray(cart)) cart = [];
-  cart = cart.filter(x => x && typeof x.name === 'string').map((x, i) => ({id:x.id || String(Date.now()+i), name:x.name, price:Math.max(0,Number(x.price)||0), qty:Math.max(1,Number(x.qty)||1)}));
+  cart = cart.filter(x => x && typeof x.name === 'string' && !['Pizza Meio a Meio','Tartufo & Funghi','Coca-Cola Zero'].includes(x.name.trim())).map((x, i) => ({id:x.id || String(Date.now()+i), name:x.name, price:Math.max(0,Number(x.price)||0), qty:Math.max(1,Number(x.qty)||1)}));
   const cartCountEls = $$('[data-cart-count]'), cartTotalEls = $$('[data-cart-total]');
   const cartPanel = $('#tab-carrinho');
   const orderHeading = cartPanel && [...cartPanel.querySelectorAll('*')].find(el => el.children.length === 0 && el.textContent.trim() === 'Seu Pedido');
-  const orderHeader = orderHeading?.parentElement?.parentElement;
+  const orderHeader = orderHeading?.closest('.flex.items-center.justify-between');
   let cartItemsHost = $('#live-cart-items');
   if (orderHeader && !cartItemsHost) {
-    cartItemsHost = document.createElement('div'); cartItemsHost.id = 'live-cart-items'; cartItemsHost.className = 'flex flex-col gap-3';
+    cartItemsHost = document.createElement('div');
+    cartItemsHost.id = 'live-cart-items';
+    cartItemsHost.className = 'flex flex-col gap-3';
     orderHeader.insertAdjacentElement('afterend', cartItemsHost);
-    ['Pizza Meio a Meio','Tartufo & Funghi','Coca-Cola Zero'].forEach(name => {
-      const h = [...cartPanel.querySelectorAll('h3')].find(el => el.textContent.trim() === name);
-      const card = h?.closest('.bg-surface-container.rounded-xl'); if (card) card.hidden = true;
-    });
-    const sumTitle = [...cartPanel.querySelectorAll('h3')].find(el => el.textContent.trim() === 'Resumo de Valores');
-    if (sumTitle?.parentElement) sumTitle.parentElement.dataset.liveSummary = 'true';
   }
+  // Remove os itens de exemplo que vinham no HTML: só itens adicionados pelo usuário aparecem no carrinho.
+  ['Pizza Meio a Meio','Tartufo & Funghi','Coca-Cola Zero'].forEach(name => {
+    const h = [...(cartPanel?.querySelectorAll('h3') || [])].find(el => el.textContent.trim() === name);
+    const card = h?.closest('.bg-surface-container.rounded-xl');
+    if (card) card.hidden = true;
+  });
+  // O resumo é o cartão inteiro, não apenas o cabeçalho.
+  const sumTitle = [...(cartPanel?.querySelectorAll('h3') || [])].find(el => el.textContent.trim() === 'Resumo de Valores');
+  const summary = sumTitle?.closest('.bg-surface-container.rounded-xl');
+  if (summary) summary.dataset.liveSummary = 'true';
   const saveCart = () => safeWrite('bellaMassaCart', cart);
   function renderCart() {
     const count = cart.reduce((s,x)=>s+x.qty,0), subtotal = cart.reduce((s,x)=>s+x.price*x.qty,0);
@@ -373,7 +379,8 @@
       button.addEventListener('click', () => {
         button.parentElement?.querySelectorAll('button').forEach(b => b.classList.toggle('ring-2', b === button));
         safeWrite('bellaTip', Number(label.replace(/[^0-9]/g, '')));
-        showToast(`Gorjeta demonstrativa selecionada: ${label}.`);
+        renderCart();
+        showToast(`Gorjeta selecionada: ${label}.`);
       });
       button.dataset.jsHandled = 'true';
       return;
@@ -382,7 +389,11 @@
       button.addEventListener('click', () => {
         const value = prompt('Valor da gorjeta em reais:');
         const amount = Number(String(value || '').replace(',', '.'));
-        if (Number.isFinite(amount) && amount >= 0) { safeWrite('bellaTip', amount); showToast(`Gorjeta demonstrativa de ${money(amount)} selecionada.`); }
+        if (value !== null && Number.isFinite(amount) && amount >= 0) {
+          safeWrite('bellaTip', amount);
+          renderCart();
+          showToast(`Gorjeta de ${money(amount)} selecionada.`);
+        }
       });
       button.dataset.jsHandled = 'true';
       return;

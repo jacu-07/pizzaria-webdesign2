@@ -115,7 +115,7 @@ img {
 .tab-panel {
   display: none;
   width: 100%;
-  min-height: calc(100vh - 220px);
+  min-height: 0;
   animation: panel-enter 220ms ease both;
 }
 
