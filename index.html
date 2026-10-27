@@ -1,7 +1,12 @@
+<!-- Define que este documento usa o padrão HTML5. -->
 <!doctype html>
+<!-- lang="pt-BR" informa ao navegador e leitores de tela que o conteúdo está em português brasileiro. -->
 <html lang="pt-BR">
 <head>
+  <!-- A seção HEAD contém configurações e arquivos externos; não é o conteúdo principal visível da página. -->
+  <!-- Permite acentos e caracteres especiais, como ç, ã e é. -->
   <meta charset="utf-8">
+  <!-- Faz o layout se adaptar à largura de celulares e tablets. -->
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#17130f" id="theme-color-meta">
   <meta name="description" content="Bella Massa Pizzeria — escolha sua pizza, monte a sua e acompanhe seu pedido.">
@@ -9,11 +14,16 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&family=Playfair+Display:wght@600;700;800&display=swap" rel="stylesheet">
+  <!-- Carrega as regras visuais que ficam separadas no arquivo style.css. -->
   <link rel="stylesheet" href="style.css">
+  <!-- Carrega as funcionalidades JavaScript. defer espera o HTML ser analisado antes de executar o script. -->
   <script src="script.js" defer></script>
 </head>
 <body>
+  <!-- BODY contém tudo o que o visitante vê e utiliza no site. -->
+  <!-- Faixa informativa no topo do site. -->
   <div class="announcement"><span class="status-dot"></span> Feita com carinho, direto do forno para você <span class="announcement-sep">•</span> <span id="delivery-status">Pedidos para retirada e entrega</span></div>
+  <!-- Cabeçalho: marca, navegação, botão de tema e acesso ao carrinho. -->
   <header class="site-header">
     <a class="brand" href="#inicio" aria-label="Bella Massa, início">
       <span class="brand-mark" aria-hidden="true">BM<span>✦</span></span>
@@ -29,7 +39,9 @@
     <button class="cart-button" id="open-cart" type="button" aria-label="Abrir carrinho"> <span aria-hidden="true">🛒</span><span class="cart-label">Carrinho</span><span class="cart-count" id="cart-count">0</span></button>
   </header>
 
+  <!-- MAIN agrupa o conteúdo principal da página. Cada SECTION abaixo é uma área do site. -->
   <main>
+    <!-- INÍCIO: apresentação da pizzaria e links para explorar o cardápio ou montar uma pizza. -->
     <section class="page-section hero" id="inicio" aria-labelledby="hero-title">
       <div class="hero-content">
         <span class="eyebrow"><span>✦</span> O sabor que reúne</span>
@@ -41,8 +53,11 @@
       <div class="hero-art" aria-label="Pizza artesanal recém-saída do forno" role="img"><div class="hero-image"></div><div class="round-stamp"><span>FEITA À MÃO</span><strong>✦</strong><span>AMOR EM CADA FATIA</span></div><div class="hero-caption"><span class="caption-icon">✦</span><span><strong>Da nossa cozinha</strong><small>para a sua mesa</small></span></div></div>
     </section>
 
+    <!-- DIFERENCIAIS: destaca características da experiência da pizzaria. -->
     <section class="trust-strip" aria-label="Diferenciais"><div><span>♨</span><p><strong>Forno bem quente</strong><small>Borda dourada e leve</small></p></div><div><span>✧</span><p><strong>Ingredientes frescos</strong><small>Selecionados todos os dias</small></p></div><div><span>♡</span><p><strong>Feita artesanalmente</strong><small>Da massa à última fatia</small></p></div></section>
 
+    <!-- CARDÁPIO: o JavaScript cria os cartões de produtos dentro de #product-grid. -->
+    <!-- A busca e os botões de categoria filtram os produtos sem recarregar a página. -->
     <section class="page-section menu-section" id="cardapio" aria-labelledby="menu-title">
       <div class="section-heading"><div><span class="eyebrow">ESCOLHAS DA CASA</span><h2 id="menu-title">Encontre sua <em>favorita.</em></h2><p>Pizzas salgadas, doces e bebidas para deixar seu pedido completo.</p></div><a class="text-link desktop-only" href="#monte">Prefere inventar? Monte a sua →</a></div>
       <div class="menu-tools"><label class="search-box"><span aria-hidden="true">⌕</span><input id="menu-search" type="search" placeholder="Buscar pizza, doce, bebida ou ingrediente…" aria-label="Buscar no cardápio"></label><div class="filter-list" role="group" aria-label="Filtrar pizzas"><button class="filter-chip active" data-filter="Todas" type="button">Todas</button><button class="filter-chip" data-filter="Clássicas" type="button">Clássicas</button><button class="filter-chip" data-filter="Especiais" type="button">Especiais</button><button class="filter-chip" data-filter="Vegetarianas" type="button">Vegetarianas</button><button class="filter-chip" data-filter="Pizzas doces" type="button">Pizzas doces</button><button class="filter-chip" data-filter="Bebidas" type="button">Bebidas</button></div></div>
@@ -50,6 +65,8 @@
       <p class="empty-state hidden" id="empty-menu">Não encontramos produtos com esse termo. Tente outra busca ou categoria.</p>
     </section>
 
+    <!-- MONTE SUA PIZZA: formulário para escolher tamanho, massa e ingredientes. -->
+    <!-- Os preços das opções ficam nos atributos data-price e são somados pelo JavaScript. -->
     <section class="custom-section" id="monte" aria-labelledby="custom-title">
       <div class="custom-copy"><span class="eyebrow">SUA PIZZA, SUAS REGRAS</span><h2 id="custom-title">A melhor combinação<br>é a <em>que você inventa.</em></h2><p>Escolha o tamanho, a massa e os ingredientes. A gente cuida do resto.</p><div class="custom-note"><span>✦</span><span>Você escolhe os sabores e acompanha o total antes de adicionar ao carrinho.</span></div></div>
       <form id="custom-form" class="custom-card">
@@ -61,16 +78,22 @@
       </form>
     </section>
 
+    <!-- CLUBE BELLA: formulário de demonstração para cadastrar nome e e-mail no navegador. -->
     <section class="page-section club-section" id="clube" aria-labelledby="club-title"><div class="club-card"><div class="club-decoration" aria-hidden="true">✦</div><div class="club-copy"><span class="eyebrow">BOM DEMAIS PARA FICAR DE FORA</span><h2 id="club-title">Quem é Bella,<br><em>sempre ganha.</em></h2><p>Entre para o Clube Bella Massa e receba novidades, ofertas especiais e surpresas da casa.</p><ul><li>✦ Novidades do cardápio em primeira mão</li><li>✦ Ofertas especiais para membros</li><li>✦ Uma comunidade de apaixonados por pizza</li></ul></div><form id="club-form" class="club-form"><label for="club-name">Como podemos te chamar?</label><input id="club-name" name="name" autocomplete="name" placeholder="Seu nome" required maxlength="70"><label for="club-email">Seu melhor e-mail</label><input id="club-email" name="email" type="email" autocomplete="email" placeholder="voce@email.com" required maxlength="120"><button class="button button-light" type="submit">Quero fazer parte <span aria-hidden="true">→</span></button><p id="club-message" class="form-message" role="status">Cadastro local de demonstração; seus dados ficam neste navegador.</p></form></div></section>
 
+    <!-- CHAMADA FINAL: leva o visitante de volta ao cardápio. -->
     <section class="page-section footer-cta"><div><span class="eyebrow">BATEU AQUELA FOME?</span><h2>Hoje combina com <em>Bella Massa.</em></h2></div><a class="button button-primary" href="#cardapio">Escolher minha pizza ↗</a></section>
   </main>
 
+  <!-- RODAPÉ: identidade da marca e ano atualizado automaticamente pelo JavaScript. -->
   <footer class="site-footer"><a class="brand footer-brand" href="#inicio"><span class="brand-mark">BM<span>✦</span></span><span class="brand-copy"><strong>Bella Massa</strong><small>P I Z Z E R I A</small></span></a><p>Pizza artesanal. Bons momentos. ♡</p><small>© <span id="year"></span> Bella Massa Pizzeria. Feito com carinho.</small></footer>
 
+  <!-- NAVEGAÇÃO MÓVEL: aparece em telas pequenas por meio de regras no CSS. -->
   <nav class="mobile-nav" aria-label="Navegação rápida"><a href="#inicio" data-nav="inicio" class="active"><span>⌂</span><small>Início</small></a><a href="#cardapio" data-nav="cardapio"><span>☷</span><small>Cardápio</small></a><a href="#monte" data-nav="monte"><span>✦</span><small>Monte a sua</small></a><button id="mobile-cart" type="button"><span>🛒<b id="mobile-cart-count">0</b></span><small>Sacola</small></button></nav>
 
+  <!-- MODAL DO CARRINHO: começa escondido pela classe hidden e abre quando o visitante clica no carrinho. -->
   <div class="modal-backdrop hidden" id="cart-modal" role="dialog" aria-modal="true" aria-labelledby="cart-title"><section class="cart-drawer"><div class="drawer-heading"><div><span class="eyebrow">SEU PEDIDO</span><h2 id="cart-title">Sua sacola</h2></div><button class="icon-button" id="close-cart" type="button" aria-label="Fechar carrinho">×</button></div><div id="cart-items" class="cart-items"></div><div id="cart-empty" class="cart-empty"><span aria-hidden="true">🍕</span><h3>Sua sacola está vazia</h3><p>Escolha uma pizza, sobremesa ou bebida para começar.</p><button class="button button-primary" id="browse-menu" type="button">Ver cardápio</button></div><div class="cart-summary hidden" id="cart-summary"><div class="summary-line"><span>Subtotal</span><strong id="cart-subtotal">R$ 0,00</strong></div><div class="summary-line"><span>Entrega</span><strong id="delivery-price">Calculada no fechamento</strong></div><div class="summary-line total-line"><span>Total dos itens</span><strong id="cart-total">R$ 0,00</strong></div><label class="checkout-label" for="order-notes">Observações do pedido (opcional)</label><textarea id="order-notes" rows="2" maxlength="300" placeholder="Ex.: tirar cebola, interfone quebrado…"></textarea><button class="button button-primary checkout-button" id="checkout-button" type="button">Finalizar pedido <span aria-hidden="true">→</span></button><p class="checkout-note">Demonstração: o pedido será preparado para copiar. Nenhum pagamento é processado neste site.</p></div></section></div>
+  <!-- AVISO TEMPORÁRIO: mensagens como “adicionado à sacola” aparecem aqui. -->
   <div class="toast" id="toast" role="status" aria-live="polite"></div>
 </body>
 </html>
