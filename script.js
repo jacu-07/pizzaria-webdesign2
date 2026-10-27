@@ -51,7 +51,7 @@
   window.activateTab = activateTab;
   tabButtons.forEach(button => button.addEventListener('click', () => activateTab(button.dataset.tab)));
   $$('[data-go-tab]').forEach(el => el.addEventListener('click', () => activateTab(el.dataset.goTab)));
-  $$('[data-go-cart]').forEach(el => el.addEventListener('click', () => activateTab('carrinho')));
+  $$('[data-go-cart]').filter(el => !el.hasAttribute('data-builder-submit')).forEach(el => el.addEventListener('click', () => activateTab('carrinho')));
   const initialTab = location.hash.slice(1);
   activateTab(panels.some(p => p.dataset.panel === initialTab) ? initialTab : 'inicio', false);
   window.addEventListener('hashchange', () => activateTab(location.hash.slice(1), false));

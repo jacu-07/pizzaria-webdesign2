@@ -823,3 +823,46 @@ input:valid:not(:placeholder-shown) {
 .payment-field{display:flex;flex-direction:column;gap:.4rem;font-size:.85rem;color:var(--on-surface,#fff)}
 .payment-field input{width:100%;min-width:0;border:1px solid var(--outline-variant,rgba(255,255,255,.2));border-radius:10px;background:var(--surface-container-lowest,#151515);color:inherit;padding:.7rem .8rem;outline:none}
 .payment-field input:focus{border-color:var(--secondary,#d6a75b)}
+
+/* Ajustes finais: evitar áreas vazias e excesso de altura no carrinho e no Clube */
+#tab-carrinho,
+#tab-clube {
+  min-height: 0 !important;
+  height: auto !important;
+  padding-bottom: 18px;
+}
+
+#tab-carrinho > .flex.flex-col.w-full {
+  gap: 0;
+  min-height: 0;
+  height: auto;
+}
+
+#tab-carrinho .px-margin.flex.flex-col.gap-space-md {
+  gap: 14px;
+  min-height: 0;
+  height: auto;
+}
+
+#live-cart-items {
+  min-height: 0;
+  height: auto;
+  margin: 0;
+}
+
+#live-cart-items > div {
+  min-height: 0;
+}
+
+#tab-clube .panel-heading {
+  margin-bottom: 20px;
+}
+
+#tab-clube .club-grid {
+  margin-top: 0;
+  margin-bottom: 18px;
+}
+
+#tab-clube .club-signup {
+  margin-bottom: 0;
+}
