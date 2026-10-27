@@ -1143,5 +1143,43 @@
 
 
 
-<script defer="True" src="script.js"></script></body>
+<script src="script.js" defer></script>
+<script>
+/* Navegação de segurança: sincroniza URL, painel visível e botão selecionado. */
+(function () {
+  const aliases = { 'clube-fidelidade': 'clube', 'monte-a-sua': 'pizza', 'home-feed': 'inicio' };
+  function showPanelFromHash() {
+    const raw = (window.location.hash || '#inicio').slice(1);
+    const name = aliases[raw] || raw;
+    const panels = Array.from(document.querySelectorAll('.tab-panel[data-panel]'));
+    const valid = panels.some(panel => panel.dataset.panel === name);
+    const target = valid ? name : 'inicio';
+    panels.forEach(panel => {
+      const active = panel.dataset.panel === target;
+      panel.classList.toggle('active', active);
+      panel.setAttribute('aria-hidden', String(!active));
+      panel.style.display = active ? 'block' : 'none';
+    });
+    document.querySelectorAll('[data-tab]').forEach(button => {
+      const active = button.dataset.tab === target;
+      button.classList.toggle('active', active);
+      if (active) button.setAttribute('aria-current', 'page');
+      else button.removeAttribute('aria-current');
+    });
+    document.body.dataset.currentTab = target;
+  }
+  document.addEventListener('click', function (event) {
+    const button = event.target.closest('[data-tab]');
+    if (!button) return;
+    const name = button.dataset.tab;
+    if (!document.querySelector('.tab-panel[data-panel="' + name + '"]')) return;
+    if (window.location.hash !== '#' + name) history.replaceState(null, '', '#' + name);
+    showPanelFromHash();
+    window.scrollTo({ top: 0, behavior: 'auto' });
+  });
+  window.addEventListener('hashchange', showPanelFromHash);
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', showPanelFromHash);
+  else showPanelFromHash();
+})();
+</script></body>
 </html>

@@ -884,3 +884,12 @@ input:valid:not(:placeholder-shown) {
   #tab-carrinho .bg-surface-container.rounded-xl.p-space-md.flex.items-start > button { max-width: 100%; }
   #tab-cardapio .menu-product-card { gap: 10px; }
 }
+
+
+/* Correção de abas e espaços vazios: conteúdo começa logo abaixo do cabeçalho fixo. */
+#app-main.site-main { padding-top: 96px; padding-bottom: calc(104px + env(safe-area-inset-bottom, 0px)); min-height: 0 !important; height: auto !important; }
+#app-main .tab-panel { display: none !important; min-height: 0 !important; height: auto !important; margin-top: 0 !important; }
+#app-main .tab-panel.active { display: block !important; }
+#app-main .tab-panel > :first-child { margin-top: 0; }
+#tab-clube, #tab-carrinho { min-height: 0 !important; height: auto !important; }
+@media (max-width: 640px) { #app-main.site-main { padding-top: 88px; padding-bottom: calc(112px + env(safe-area-inset-bottom, 0px)); } }
