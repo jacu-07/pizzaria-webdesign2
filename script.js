@@ -96,7 +96,7 @@
   // Carrinho funcional, com itens dinâmicos e persistência local.
   let cart = safeRead('bellaMassaCart', []);
   if (!Array.isArray(cart)) cart = [];
-  cart = cart.filter(x => x && typeof x.name === 'string' && !['Pizza Meio a Meio','Tartufo & Funghi','Coca-Cola Zero'].includes(x.name.trim())).map((x, i) => ({id:x.id || String(Date.now()+i), name:x.name, price:Math.max(0,Number(x.price)||0), qty:Math.max(1,Number(x.qty)||1)}));
+  cart = cart.filter(x => x && typeof x.name === 'string' && !['Pizza Meio a Meio','Tartufo & Funghi','Tartufo & Funghi Selvatici','Coca-Cola Zero'].includes(x.name.trim())).map((x, i) => ({id:x.id || String(Date.now()+i), name:x.name, price:Math.max(0,Number(x.price)||0), qty:Math.max(1,Number(x.qty)||1)}));
   const cartCountEls = $$('[data-cart-count]'), cartTotalEls = $$('[data-cart-total]');
   const cartPanel = $('#tab-carrinho');
   const orderHeading = cartPanel && [...cartPanel.querySelectorAll('*')].find(el => el.children.length === 0 && el.textContent.trim() === 'Seu Pedido');
@@ -108,12 +108,7 @@
     cartItemsHost.className = 'flex flex-col gap-3';
     orderHeader.insertAdjacentElement('afterend', cartItemsHost);
   }
-  // Remove os itens de exemplo que vinham no HTML: só itens adicionados pelo usuário aparecem no carrinho.
-  ['Pizza Meio a Meio','Tartufo & Funghi','Coca-Cola Zero'].forEach(name => {
-    const h = [...(cartPanel?.querySelectorAll('h3') || [])].find(el => el.textContent.trim() === name);
-    const card = h?.closest('.bg-surface-container.rounded-xl');
-    if (card) card.hidden = true;
-  });
+  // O HTML do carrinho não contém mais produtos de demonstração; só renderCart() lista itens reais.
   // O resumo é o cartão inteiro, não apenas o cabeçalho.
   const sumTitle = [...(cartPanel?.querySelectorAll('h3') || [])].find(el => el.textContent.trim() === 'Resumo de Valores');
   const summary = sumTitle?.closest('.bg-surface-container.rounded-xl');
@@ -122,6 +117,19 @@
   function renderCart() {
     const count = cart.reduce((s,x)=>s+x.qty,0), subtotal = cart.reduce((s,x)=>s+x.price*x.qty,0);
     const tip = Math.max(0,Number(safeRead('bellaTip',0))||0);
+    // Todos os valores de gorjeta começam iguais; apenas a opção selecionada ganha destaque.
+    cartPanel?.querySelectorAll('button').forEach(button => {
+      const label = (button.textContent || '').trim();
+      if (!/^(R\$\s*(3|5|10)|Outro)$/.test(label)) return;
+      const amount = label === 'Outro' ? null : Number(label.replace(/[^0-9]/g, ''));
+      const selected = amount !== null && tip === amount;
+      button.classList.remove('bg-secondary-container','text-on-secondary-container','font-bold','shadow-sm','ring-2');
+      button.classList.add('bg-surface-container-high','text-on-surface-variant');
+      if (selected) {
+        button.classList.remove('bg-surface-container-high','text-on-surface-variant');
+        button.classList.add('bg-secondary-container','text-on-secondary-container','font-bold','shadow-sm','ring-2');
+      }
+    });
     const pickup = safeRead('bellaFulfillment','delivery') === 'pickup';
     const delivery = pickup || subtotal === 0 || subtotal >= 150 ? 0 : 8;
     const discount = pickup ? subtotal * 0.10 : 0;
@@ -209,31 +217,158 @@
     if(/PIZZA10|Cupom/.test(label))button.addEventListener('click',()=>showToast('Cupons ainda não estão conectados a um sistema de pedidos.'));
   });
 
-  // Personalizador da pizza.
-  window.selectFlavor = (name, ingredients, priceDiff, element) => {
-    const title = $('#preview-b-title'), sideName = $('#side-b-name'), sideIngredients = $('#side-b-ingredients');
-    if (title) title.textContent = name.split(' ')[0];
-    if (sideName) sideName.textContent = name;
-    if (sideIngredients) sideIngredients.textContent = ingredients;
-    const parent = element?.parentElement;
-    if (parent) $$('button', parent).forEach(button => {
-      button.classList.remove('ring-2', 'ring-primary', 'border-primary');
-      button.setAttribute('aria-pressed', 'false');
-    });
-    element?.classList.add('ring-2', 'ring-primary', 'border-primary');
-    element?.setAttribute('aria-pressed', 'true');
-    const diff = $('#flavor-price-diff');
-    if (diff) diff.textContent = priceDiff;
-    showToast(`Sabor ${name} selecionado.`);
+  // Personalizador da pizza: tamanho, divisão, sabores, massa, borda e preço em tempo real.
+  const builder = $('#tab-pizza');
+  const builderState = {
+    size: 'grande',
+    mode: 'meio',
+    flavors: [{ name: 'Diavola Artesanal', ingredients: 'Salame picante artesanal, fior di latte, pepperoncino', price: 37 }]
   };
+  const builderMoney = value => money(value);
+  const sizePrices = { media: 32.50, grande: 41.50 };
+  const sizeNames = { media: 'Média', grande: 'Grande' };
+  const flavorCards = () => $$('[data-builder-flavor]', builder || document);
+  const selectedRadioExtra = name => {
+    const input = $(`#tab-pizza input[name="${name}"]:checked`);
+    if (!input) return 0;
+    const label = input.closest('label');
+    const match = (label?.innerText || '').match(/\+\s*R\$\s*([\d.]+,\d{2})/);
+    return match ? Number(match[1].replace(/\./g, '').replace(',', '.')) : 0;
+  };
+  const selectedRadioName = name => {
+    const input = $(`#tab-pizza input[name="${name}"]:checked`);
+    return input?.closest('label')?.querySelector('.font-title-md')?.textContent.trim() || '';
+  };
+  function builderPrice() {
+    const base = sizePrices[builderState.size];
+    const flavors = builderState.flavors;
+    const flavorExtra = flavors.length ? flavors.reduce((sum, f) => sum + f.price, 0) / flavors.length : 0;
+    return base + flavorExtra + selectedRadioExtra('crust-dough') + selectedRadioExtra('crust-edge');
+  }
+  function renderBuilder() {
+    if (!builder) return;
+    const isSingle = builderState.mode === 'unico';
+    const isStations = builderState.mode === 'estacoes';
+    const sideB = $('#pizza-side-b-layer');
+    const sideBSummary = $('#card-b-summary');
+    if (sideB) sideB.style.display = isSingle ? 'none' : 'flex';
+    if (sideBSummary) sideBSummary.style.display = isSingle ? 'none' : 'flex';
+    const selectedNames = builderState.flavors.map(f => f.name);
+    const mainFlavor = builderState.flavors[0] || { name: 'Margherita', ingredients: 'San Marzano, Fior di Latte', price: 0 };
+    const title = $('#preview-b-title');
+    const sideName = $('#side-b-name');
+    const sideIngredients = $('#side-b-ingredients');
+    if (title) title.textContent = isStations ? `${selectedNames.length}/3 sabores` : mainFlavor.name.split(' ')[0];
+    if (sideName) sideName.textContent = isStations ? (selectedNames.join(', ') || 'Escolha os sabores') : mainFlavor.name;
+    if (sideIngredients) sideIngredients.textContent = isStations ? 'Margherita + sabores selecionados' : mainFlavor.ingredients;
+    const sideALabel = $('#tab-pizza .grid.grid-cols-2 p.font-headline-sm');
+    const sideAIngredients = sideALabel?.nextElementSibling;
+    if (isSingle && sideALabel) {
+      sideALabel.textContent = mainFlavor.name;
+      if (sideAIngredients) sideAIngredients.textContent = mainFlavor.ingredients;
+    } else if (sideALabel) {
+      sideALabel.textContent = 'Margherita';
+      if (sideAIngredients) sideAIngredients.textContent = 'San Marzano, Fior di Latte';
+    }
+    flavorCards().forEach(card => {
+      const name = card.dataset.builderFlavor;
+      const selected = builderState.flavors.some(f => f.name === name);
+      card.classList.toggle('builder-flavor-selected', selected);
+      card.setAttribute('aria-pressed', String(selected));
+      card.classList.toggle('shadow-md', selected);
+      card.classList.toggle('ring-2', selected);
+      card.classList.toggle('ring-primary', selected);
+      const check = card.querySelector('.w-6.h-6 .material-symbols-outlined');
+      if (check) check.textContent = selected ? 'check' : 'add';
+    });
+    const sizeLabel = $('#pizza-size-label');
+    if (sizeLabel) sizeLabel.textContent = builderState.size === 'grande' ? 'Grande • 35 cm • 8 fatias' : 'Média • 30 cm • 6 fatias';
+    $$('[data-pizza-size]', builder).forEach(button => {
+      const active = button.dataset.pizzaSize === builderState.size;
+      button.classList.toggle('is-selected', active);
+      button.setAttribute('aria-pressed', String(active));
+    });
+    $$('[data-pizza-mode]', builder).forEach(button => {
+      const active = button.dataset.pizzaMode === builderState.mode;
+      button.classList.toggle('bg-primary-container', active);
+      button.classList.toggle('text-on-primary-container', active);
+      button.classList.toggle('shadow-md', active);
+      button.classList.toggle('text-on-surface-variant', !active);
+      button.setAttribute('aria-pressed', String(active));
+    });
+    const total = builderPrice();
+    const totalEl = $('#pizza-total-price');
+    const bottomTotal = $('#bottom-total-price');
+    const composition = $('#pizza-composition-price');
+    if (totalEl) totalEl.textContent = builderMoney(total);
+    if (bottomTotal) bottomTotal.textContent = builderMoney(total);
+    if (composition) {
+      const modeName = isSingle ? 'Pizza inteira' : isStations ? '4 estações' : 'Meio a meio';
+      const dough = selectedRadioName('crust-dough');
+      const edge = selectedRadioName('crust-edge');
+      composition.textContent = `${sizeNames[builderState.size]} · ${modeName} · ${dough}${edge ? ` · ${edge}` : ''}`;
+    }
+    const modeHelp = builder.querySelector('[data-builder-help]');
+    if (modeHelp) modeHelp.textContent = isStations ? 'Selecione até 3 sabores além da Margherita.' : isSingle ? 'Selecione um sabor para a pizza inteira.' : 'Margherita de um lado e um sabor do outro.';
+  }
+  window.selectFlavor = (name, ingredients, priceDiff, element) => {
+    const price = Number(String(priceDiff || element?.dataset.builderPrice || '0').replace(/[^0-9,.-]/g, '').replace(',', '.')) || Number(element?.dataset.builderPrice) || 0;
+    const flavor = { name: String(name).replace(/&amp;/g, '&'), ingredients, price };
+    const existing = builderState.flavors.findIndex(f => f.name === flavor.name);
+    if (builderState.mode === 'estacoes') {
+      if (existing >= 0) builderState.flavors.splice(existing, 1);
+      else if (builderState.flavors.length < 3) builderState.flavors.push(flavor);
+      else showToast('No modo 4 Estações, selecione no máximo 3 sabores além da Margherita.');
+    } else {
+      builderState.flavors = [flavor];
+    }
+    renderBuilder();
+    showToast(builderState.mode === 'estacoes' ? 'Seleção de sabores atualizada.' : `Sabor ${flavor.name} selecionado.`);
+  };
+  $$('[data-pizza-size]', builder).forEach(button => {
+    button.addEventListener('click', () => { builderState.size = button.dataset.pizzaSize; renderBuilder(); });
+    button.dataset.jsHandled = 'true';
+  });
+  $$('[data-pizza-mode]', builder).forEach(button => {
+    button.addEventListener('click', () => {
+      builderState.mode = button.dataset.pizzaMode;
+      if (builderState.mode !== 'estacoes' && builderState.flavors.length > 1) builderState.flavors = [builderState.flavors[0]];
+      if (!builderState.flavors.length) builderState.flavors = [{ name: 'Diavola Artesanal', ingredients: 'Salame picante artesanal, fior di latte, pepperoncino', price: 37 }];
+      renderBuilder();
+      showToast(`Divisão selecionada: ${button.innerText.trim()}.`);
+    });
+    button.dataset.jsHandled = 'true';
+  });
+  flavorCards().forEach(card => {
+    card.addEventListener('keydown', event => {
+      if (event.key === 'Enter' || event.key === ' ') { event.preventDefault(); card.click(); }
+    });
+  });
+  $$('input[name="crust-dough"], input[name="crust-edge"]', builder || document).forEach(input => {
+    input.addEventListener('change', renderBuilder);
+  });
+  const stepTargets = [
+    builder?.querySelector('.pizza-mode-options'),
+    [...(builder?.querySelectorAll('.flex.flex-col.gap-space-xs.mt-space-xs') || [])][0],
+    [...(builder?.querySelectorAll('.flex.flex-col.gap-space-xs.mt-space-xs') || [])][1],
+    flavorCards()[0]?.parentElement
+  ];
+  $$('#tab-pizza .px-margin.pt-space-sm.pb-space-md button').forEach((button, index) => {
+    button.addEventListener('click', () => {
+      stepTargets[index]?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    });
+  });
   window.handleAddPizza = () => {
-    const name = ($('#side-b-name')?.textContent || 'Pizza personalizada').trim();
-    const priceText = $('#pizza-total-price')?.textContent || '';
-    const match = priceText.match(/([\d.]+,\d{2})/);
-    const price = match ? Number(match[1].replace(/\./g, '').replace(',', '.')) : 78.50;
-    addToCart(`Pizza personalizada — ${name}`, price);
+    if (!builderState.flavors.length) { showToast('Escolha pelo menos um sabor para sua pizza.'); return; }
+    const modeName = builderState.mode === 'unico' ? 'Inteira' : builderState.mode === 'estacoes' ? '4 Estações' : 'Meio a Meio';
+    const flavors = builderState.mode === 'unico' ? builderState.flavors[0].name : `Margherita + ${builderState.flavors.map(f => f.name).join(' + ')}`;
+    const dough = selectedRadioName('crust-dough');
+    const edge = selectedRadioName('crust-edge');
+    const description = `${sizeNames[builderState.size]} ${modeName} — ${flavors} — ${dough} — ${edge}`;
+    addToCart(`Pizza personalizada (${description})`, builderPrice());
     activateTab('carrinho');
   };
+  renderBuilder();
 
   // Alternância entrega/retirada.
   const deliveryBtn = $('#toggle-delivery'), pickupBtn = $('#toggle-pickup');

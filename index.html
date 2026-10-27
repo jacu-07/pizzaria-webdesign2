@@ -562,7 +562,11 @@
 <!-- Size pill badge -->
 <div class="flex items-center gap-1 bg-surface-container-high text-on-surface px-space-sm py-1 rounded-full shadow-sm mb-space-sm">
 <span class="material-symbols-outlined text-secondary text-[16px]">straighten</span>
-<span class="font-label-sm text-label-sm font-bold tracking-wide">Grande • 35cm • 8 fatias</span>
+<span class="font-label-sm text-label-sm font-bold tracking-wide" id="pizza-size-label">Grande • 35cm • 8 fatias</span>
+</div>
+<div class="pizza-size-options" role="group" aria-label="Tamanho da pizza">
+<button type="button" class="pizza-size-option" data-pizza-size="media" aria-pressed="false">Média <span>30 cm · 6 fatias</span><strong>R$ 32,50</strong></button>
+<button type="button" class="pizza-size-option is-selected" data-pizza-size="grande" aria-pressed="true">Grande <span>35 cm · 8 fatias</span><strong>R$ 41,50</strong></button>
 </div>
 <!-- Interactive Pizza Disc Visualizer -->
 <div class="relative w-56 h-56 my-space-xs flex items-center justify-center">
@@ -628,17 +632,18 @@
 <span class="font-label-sm text-label-sm text-secondary uppercase font-bold tracking-wider">Obrigatório</span>
 </div>
 <!-- Segmented Buttons -->
-<div class="grid grid-cols-3 gap-space-xs bg-surface-container-low p-1 rounded-full">
-<button class="py-2.5 px-2 rounded-full text-center transition-all text-on-surface-variant hover:text-on-surface" type="button">
+<div class="pizza-mode-options grid grid-cols-3 gap-space-xs bg-surface-container-low p-1 rounded-full" role="group" aria-label="Divisão da pizza">
+<button class="py-2.5 px-2 rounded-full text-center transition-all text-on-surface-variant hover:text-on-surface" type="button" data-pizza-mode="unico" aria-pressed="false">
 <span class="font-label-sm text-label-sm block truncate">Único (100%)</span>
 </button>
-<button class="py-2.5 px-2 rounded-full text-center bg-primary-container text-on-primary-container shadow-md transition-all" type="button">
+<button class="py-2.5 px-2 rounded-full text-center bg-primary-container text-on-primary-container shadow-md transition-all" type="button" data-pizza-mode="meio" aria-pressed="true">
 <span class="font-label-sm text-label-sm font-bold block truncate">Meio a Meio</span>
 </button>
 <button class="py-2.5 px-2 rounded-full text-center text-on-surface-variant hover:text-on-surface transition-all flex flex-col items-center justify-center" type="button">
 <span class="font-label-sm text-label-sm block truncate">4 Estações</span>
 </button>
 </div>
+<p class="pizza-builder-help" data-builder-help>Margherita de um lado e um sabor do outro.</p>
 </div>
 <!-- 2. ESCOLHA DA MASSA -->
 <div class="flex flex-col gap-space-xs mt-space-xs">
@@ -736,7 +741,7 @@
 <!-- Sabor Cards List -->
 <div class="flex flex-col gap-space-xs">
 <!-- Flavor 1 (Active Selected: Diavola) -->
-<div class="bg-surface-container p-space-sm rounded-xl flex items-center justify-between gap-space-sm shadow-md cursor-pointer group" onclick="selectFlavor('Diavola Artesanal', 'Salame picante artesanal, fior di latte, pepperoncino', '+R$ 37,00', this)">
+<div class="bg-surface-container p-space-sm rounded-xl flex items-center justify-between gap-space-sm shadow-md cursor-pointer group" data-builder-flavor="Diavola Artesanal" data-builder-price="37" role="button" tabindex="0" aria-pressed="true" onclick="selectFlavor('Diavola Artesanal', 'Salame picante artesanal, fior di latte, pepperoncino', '+R$ 37,00', this)">
 <div class="flex items-center gap-space-sm min-w-0">
 <div class="w-14 h-14 rounded-lg overflow-hidden shrink-0 bg-surface-container-highest">
 <img class="w-full h-full object-cover" data-alt="Rustic close-up of a Diavola pizza slice with curled crispy artisanal spicy salami, hot chili flakes, molten cheese and dark charred Neapolitan oven-baked spots on crust." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCrlvECzsWlWdFjituQ_JOrIo7dQjxla8nUGlYereUZSb3X_oAlD_qjy0ZnFHkk46Jrt_IcawXS34HKCjWOvAzXRdvLD8iqnldon0NAZXkafb7db9sfW9Om11eYXVitZNtUfNU52GOW-SLWT9i4zt961g__sv7VnSKJSWusEgXxcI3X_ORd_ve3nZJCODjbVVN3pKkcH831IzIFv9fOeErHaetOKqNjWw1DN34U7ebiYTMtJPdp0k1q"/>
@@ -755,7 +760,7 @@
 </div>
 </div>
 <!-- Flavor 2: Quatro Queijos Nobres -->
-<div class="bg-surface-container-low p-space-sm rounded-xl flex items-center justify-between gap-space-sm shadow-sm cursor-pointer group hover:bg-surface-container" onclick="selectFlavor('Quatro Queijos Nobres', 'Gorgonzola doce, fontina alpina, provola defumada e parmigiano', '+R$ 39,00', this)">
+<div class="bg-surface-container-low p-space-sm rounded-xl flex items-center justify-between gap-space-sm shadow-sm cursor-pointer group hover:bg-surface-container" data-builder-flavor="Quatro Queijos Nobres" data-builder-price="39" role="button" tabindex="0" aria-pressed="false" onclick="selectFlavor('Quatro Queijos Nobres', 'Gorgonzola doce, fontina alpina, provola defumada e parmigiano', '+R$ 39,00', this)">
 <div class="flex items-center gap-space-sm min-w-0">
 <div class="w-14 h-14 rounded-lg overflow-hidden shrink-0 bg-surface-container-highest">
 <img class="w-full h-full object-cover" data-alt="Artisanal four-cheese pizza bubbling with melted golden mozzarella, streaks of blue gorgonzola cheese, freshly grated parmesan and creamy fondue topping fresh from wood oven." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDMKzsFzhq2-OInmx1nghHz0pCwAWqbp1u90dcY74_fflQGKKLkSVhLAzRID-Liwwn5Jl87mVBIUrcp5n6V0qVvocqsozWDYc04_O7noznqU-kZ95r15R-gr0aBZunckB-tWc8Ko3CZ-1v3ie0NrmDS7nvwxAkxbTlnmXOR6623ATCjOIjO27n_LfBVjvOAvU-ADUu1MyZ3ebQKuYOdDsHStxHoN3h7_Naui8gMbKdbB8N_r5VuYW3F"/>
@@ -771,7 +776,7 @@
 </div>
 </div>
 <!-- Flavor 3: Burrata & Pesto -->
-<div class="bg-surface-container-low p-space-sm rounded-xl flex items-center justify-between gap-space-sm shadow-sm cursor-pointer group hover:bg-surface-container" onclick="selectFlavor('Burrata &amp; Pesto', 'Burrata fresca inteira desfiada, pesto genovês de manjericão e pinoli', '+R$ 44,00', this)">
+<div class="bg-surface-container-low p-space-sm rounded-xl flex items-center justify-between gap-space-sm shadow-sm cursor-pointer group hover:bg-surface-container" data-builder-flavor="Burrata & Pesto" data-builder-price="44" role="button" tabindex="0" aria-pressed="false" onclick="selectFlavor('Burrata &amp; Pesto', 'Burrata fresca inteira desfiada, pesto genovês de manjericão e pinoli', '+R$ 44,00', this)">
 <div class="flex items-center gap-space-sm min-w-0">
 <div class="w-14 h-14 rounded-lg overflow-hidden shrink-0 bg-surface-container-highest">
 <img class="w-full h-full object-cover" data-alt="Gourmet artisanal pizza topped with whole creamy fresh burrata cheese broken open, drizzled with bright green genovese basil pesto and roasted pine nuts on dark slate table." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCEQFvgSt7S3s2JlYJJ110Apr8eFHemGI67esF26d6l7VIa9ZGVb-wAr7zInFBxDSghFSozmcNaggmKkAVGZJJNyKQhpzahl4UaBnuDU9G8enTdErpaz3k668aEjgpmz3O5SOqrvFxDlYxvtBpUU1V3kYnxUDNJbxzy21Pi0nFeN0dHMrbPW8k4Yvd-dCfwA5EySWche77jrbTxShKvWa3kEeJ991UFjNPFax1ZERldYZLUO8FRXoe9"/>
@@ -812,13 +817,13 @@
 <span class="font-label-sm text-label-sm">Composição (Meio a Meio Grande)</span>
 <span class="material-symbols-outlined text-[14px]">expand_less</span>
 </div>
-<span class="font-label-sm text-label-sm text-secondary font-bold">Base Margherita R$ 41,50 + R$ 37,00</span>
+<span class="font-label-sm text-label-sm text-secondary font-bold" id="pizza-composition-price">Grande · Margherita + Diavola</span>
 </div>
 <!-- Main Action Container -->
 <div class="flex items-center justify-between gap-space-sm">
 <div class="flex flex-col">
 <span class="font-label-sm text-label-sm text-on-surface-variant leading-none">Preço Total</span>
-<span class="font-headline-md text-headline-md text-on-surface font-bold leading-tight" id="bottom-total-price">R$ 78,50</span>
+<span class="font-headline-md text-headline-md text-on-surface font-bold leading-tight" id="bottom-total-price">R$ 78,50</span><span class="sr-only" id="pizza-total-price">R$ 78,50</span>
 </div>
 <button class="bg-primary-container text-on-primary-container h-13 px-gutter py-3 rounded-full flex items-center justify-center gap-2 shadow-lg shadow-primary-container/40 active:scale-95 transition-transform" data-add-product="Pizza personalizada" data-go-cart="true" onclick="handleAddPizza()">
 <span class="material-symbols-outlined text-[20px]">local_pizza</span>

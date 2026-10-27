@@ -690,3 +690,100 @@ input:valid:not(:placeholder-shown) {
   display: block;
   height: 12px;
 }
+
+/* Personalizador de pizza: controles responsivos e estados claros */
+#tab-pizza .pizza-size-options {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+  width: 100%;
+  max-width: 520px;
+  margin: 0 auto 16px;
+}
+
+#tab-pizza .pizza-size-option {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 3px;
+  min-width: 0;
+  padding: 12px 14px;
+  color: var(--bm-text);
+  background: var(--bm-surface-2);
+  border: 1px solid var(--bm-border);
+  border-radius: 14px;
+  text-align: left;
+  transition: border-color var(--bm-transition), background var(--bm-transition), transform var(--bm-transition);
+}
+
+#tab-pizza .pizza-size-option span {
+  color: var(--bm-muted);
+  font-size: .78rem;
+}
+
+#tab-pizza .pizza-size-option strong {
+  color: var(--bm-secondary);
+  font-size: .98rem;
+}
+
+#tab-pizza .pizza-size-option.is-selected {
+  border-color: var(--bm-primary-light);
+  background: rgba(211, 47, 47, .16);
+  box-shadow: 0 0 0 1px rgba(255, 179, 172, .2);
+}
+
+#tab-pizza .pizza-builder-help {
+  margin: 8px 2px 0;
+  color: var(--bm-muted);
+  font-size: .82rem;
+  line-height: 1.45;
+}
+
+#tab-pizza [data-builder-flavor] {
+  min-width: 0;
+  border: 1px solid transparent;
+  transition: border-color var(--bm-transition), background var(--bm-transition), box-shadow var(--bm-transition);
+}
+
+#tab-pizza [data-builder-flavor].builder-flavor-selected {
+  border-color: var(--bm-primary-light);
+  background: rgba(211, 47, 47, .13);
+}
+
+#tab-pizza [data-builder-flavor]:focus-visible,
+#tab-pizza [data-pizza-mode]:focus-visible,
+#tab-pizza [data-pizza-size]:focus-visible {
+  outline: 2px solid var(--bm-secondary);
+  outline-offset: 3px;
+}
+
+#tab-pizza .sticky.bottom-0 {
+  position: sticky;
+  bottom: 78px;
+  margin-left: -12px;
+  margin-right: -12px;
+  border-top: 1px solid var(--bm-border);
+}
+
+@media (max-width: 640px) {
+  #tab-pizza .pizza-size-options { gap: 8px; }
+  #tab-pizza .pizza-size-option { padding: 10px; font-size: .9rem; }
+  #tab-pizza .pizza-size-option strong { font-size: .9rem; }
+  #tab-pizza .relative.w-56.h-56 { width: min(70vw, 224px); height: min(70vw, 224px); }
+  #tab-pizza .relative.w-56.h-56 > div:first-child { width: 100%; height: 100%; }
+  #tab-pizza .relative.w-56.h-56 .w-\[214px\].h-\[214px\] { width: calc(min(70vw, 224px) - 10px); height: calc(min(70vw, 224px) - 10px); }
+  #tab-pizza .grid.grid-cols-2 { grid-template-columns: minmax(0, 1fr); }
+  #tab-pizza .pizza-mode-options { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  #tab-pizza .pizza-mode-options button { min-width: 0; padding-left: 5px; padding-right: 5px; font-size: .76rem; }
+  #tab-pizza .sticky.bottom-0 { bottom: 76px; padding: 10px 12px; }
+  #tab-pizza .sticky.bottom-0 > div > div:first-child { align-items: flex-start; flex-direction: column; gap: 4px; }
+  #tab-pizza #bottom-total-price { font-size: 1.25rem; }
+  #tab-pizza button[data-add-product="Pizza personalizada"] { padding: 10px 12px; font-size: .8rem; white-space: normal; }
+}
+
+@media (max-width: 380px) {
+  #tab-pizza .pizza-size-options { grid-template-columns: 1fr; }
+  #tab-pizza .pizza-mode-options button span { white-space: normal; line-height: 1.25; }
+  #tab-pizza .sticky.bottom-0 .items-center.justify-between.gap-space-sm { align-items: stretch; flex-direction: column; }
+  #tab-pizza button[data-add-product="Pizza personalizada"] { width: 100%; justify-content: center; }
+}
