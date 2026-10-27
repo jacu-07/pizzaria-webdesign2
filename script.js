@@ -165,14 +165,14 @@
         if(label.includes('Gorjeta'))val.textContent=money(tip);
         if(label.includes('Taxa de Entrega'))val.textContent=money(delivery);
         if(label.includes('Retirada') || label.includes('Desconto')) { row.hidden = !pickup; val.textContent = '-' + money(discount); }
-        if(label.includes('Cupom')){row.hidden=true;}
       });
       const totalEl=summary.querySelector('[data-cart-total]'); if(totalEl)totalEl.textContent=money(total);
+      const paymentTotal = $('#payment-total'); if (paymentTotal) paymentTotal.textContent = money(total);
     }
-    cartPanel?.querySelectorAll('button[data-go-cart] .font-headline-sm').forEach(el=>el.textContent=money(total));
+    cartPanel?.querySelectorAll('button[data-go-cart] .font-headline-sm, #scroll-to-payment .font-headline-sm').forEach(el=>el.textContent=money(total));
     const itemsLabel=[...(cartPanel?.querySelectorAll('span')||[])].find(el=>/^3 itens$/.test(el.textContent.trim()));
     if(itemsLabel)itemsLabel.textContent=count+' '+(count===1?'item':'itens');
-    const subLabel=[...(cartPanel?.querySelectorAll('span')||[])].find(el=>/^Subtotal \(3 itens\)$/.test(el.textContent.trim()));
+    const subLabel=[...(cartPanel?.querySelectorAll('span')||[])].find(el=>/^Subtotal \(.*\)$/.test(el.textContent.trim()));
     if(subLabel)subLabel.textContent='Subtotal ('+count+' '+(count===1?'item':'itens')+')';
     saveCart();
   }
@@ -210,11 +210,55 @@
   [...(cartPanel?.querySelectorAll('button')||[])].forEach(button=>{
     const label=(button.innerText||button.getAttribute('aria-label')||'').trim();
     if(label==='Limpar')button.addEventListener('click',()=>{if(confirm('Deseja remover todos os itens do carrinho?')){cart=[];renderCart();showToast('Carrinho limpo.');}});
-    if(/Ir para Pagamento/.test(label))button.addEventListener('click',()=>{
+    if(button.id === 'scroll-to-payment' || /Ir para (?:formas de )?Pagamento/i.test(label))button.addEventListener('click',()=>{
       if(!cart.length){showToast('Adicione pelo menos um produto antes de continuar.');activateTab('cardapio');return;}
-      showToast('O pagamento online ainda precisa ser conectado a um serviço de pagamento.');
+      const paymentArea = $('#payment-area');
+      if (paymentArea) {
+        paymentArea.classList.remove('hidden');
+        paymentArea.classList.add('flex');
+        const totalTarget = $('#payment-total');
+        const totalText = cartPanel?.querySelector('[data-cart-total]')?.textContent || 'R$ 0,00';
+        if (totalTarget) totalTarget.textContent = totalText;
+        paymentArea.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
     });
-    if(/PIZZA10|Cupom/.test(label))button.addEventListener('click',()=>showToast('Cupons ainda não estão conectados a um sistema de pedidos.'));
+  });
+
+
+  // Área de pagamento demonstrativa: nenhuma cobrança real é processada.
+  const paymentForm = $('#payment-form');
+  const paymentArea = $('#payment-area');
+  const paymentResult = $('#payment-result');
+  const cashChangeField = $('#cash-change-field');
+  $$('input[name="payment-method"]', paymentForm || document).forEach(input => {
+    input.addEventListener('change', () => {
+      if (cashChangeField) cashChangeField.classList.toggle('hidden', input.value !== 'cash' || !input.checked);
+      if (paymentResult) { paymentResult.classList.add('hidden'); paymentResult.textContent = ''; }
+    });
+  });
+  paymentForm?.addEventListener('submit', event => {
+    event.preventDefault();
+    if (!cart.length) {
+      showToast('Adicione pelo menos um produto antes de confirmar o pedido.');
+      activateTab('cardapio');
+      return;
+    }
+    const method = paymentForm.querySelector('input[name="payment-method"]:checked')?.value;
+    if (!method) { showToast('Escolha uma forma de pagamento.'); return; }
+    const methodNames = { pix: 'Pix (aguardando integração de pagamento)', 'card-delivery': 'Cartão na entrega/retirada', cash: 'Dinheiro' };
+    const change = method === 'cash' ? $('#cash-change')?.value.trim() : '';
+    if (paymentResult) {
+      paymentResult.classList.remove('hidden');
+      paymentResult.innerHTML = '';
+      const heading = document.createElement('strong');
+      heading.textContent = 'Pedido preparado para demonstração';
+      const detail = document.createElement('p');
+      detail.className = 'mt-2 text-sm';
+      detail.textContent = `Forma selecionada: ${methodNames[method]}. Total: ${$('#payment-total')?.textContent || 'R$ 0,00'}.${change ? ' Troco solicitado para: R$ ' + change + '.' : ''} Nenhuma cobrança foi realizada.`;
+      paymentResult.append(heading, detail);
+      paymentResult.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    }
+    showToast('Dados do pedido conferidos. Pagamento real ainda não está conectado.');
   });
 
   // Personalizador da pizza: tamanho, divisão, sabores, massa, borda e preço em tempo real.
@@ -435,6 +479,16 @@
   const builderSubmit = $('[data-builder-submit]', builder || document);
   builderSubmit?.addEventListener('click', event => {
     event.preventDefault();
+    // Não deixe sair da etapa Sabores sem completar a quantidade exigida pela divisão.
+    if (activeBuilderStep === 2) {
+      const requiredFlavors = builderState.mode === 'unico' ? 1 : builderState.mode === 'estacoes' ? 4 : 2;
+      if (builderState.flavors.length !== requiredFlavors) {
+        showToast(`Selecione ${requiredFlavors} sabor${requiredFlavors > 1 ? 'es' : ''} para esta divisão (${builderState.flavors.length}/${requiredFlavors}).`);
+        renderBuilder();
+        showBuilderStep(2, false);
+        return;
+      }
+    }
     if (activeBuilderStep < wizardSteps.length - 1) showBuilderStep(activeBuilderStep + 1);
     else window.handleAddPizza();
   });
