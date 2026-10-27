@@ -102,8 +102,8 @@ img {
 .site-main {
   position: relative;
   width: 100%;
-  min-height: 100vh;
-  padding: 92px 20px 120px;
+  min-height: 0;
+  padding: 92px 20px 28px;
 }
 
 .site-main > * {
@@ -113,14 +113,20 @@ img {
 }
 
 .tab-panel {
-  display: none;
+  display: none !important;
   width: 100%;
   min-height: 0;
+  height: auto;
   animation: panel-enter 220ms ease both;
 }
 
 .tab-panel.active {
-  display: block;
+  display: block !important;
+}
+
+.site-main {
+  height: auto;
+  min-height: 0 !important;
 }
 
 .tab-panel[aria-hidden="true"] {
@@ -527,7 +533,7 @@ nav[role="navigation"] {
     padding-top: 82px;
     padding-right: 12px;
     padding-left: 12px;
-    padding-bottom: 110px;
+    padding-bottom: 24px;
   }
 
   .panel-heading {
