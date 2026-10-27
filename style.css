@@ -901,3 +901,25 @@ input:valid:not(:placeholder-shown) {
 #app-main .tab-panel.active { display: block !important; visibility: visible !important; opacity: 1 !important; transform: none !important; }
 #app-main .tab-panel.active > :first-child { margin-top: 0 !important; }
 @media (max-width: 640px) { #app-main.site-main { padding-top: 16px !important; padding-bottom: calc(112px + env(safe-area-inset-bottom, 0px)) !important; } }
+
+
+/* Correção mínima de navegação: o painel ativo é o único visível. */
+#app-main.site-main {
+  padding-top: 20px !important;
+  padding-bottom: calc(112px + env(safe-area-inset-bottom, 0px)) !important;
+  height: auto !important;
+  min-height: 0 !important;
+}
+#app-main .tab-panel {
+  display: none !important;
+  visibility: hidden;
+  height: auto !important;
+  min-height: 0 !important;
+  margin-top: 0 !important;
+}
+#app-main .tab-panel.active {
+  display: block !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+  transform: none !important;
+}

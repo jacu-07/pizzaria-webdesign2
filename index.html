@@ -1144,88 +1144,68 @@
 
 
 <script src="script.js" defer></script>
+
 <script>
-/* Navegação de segurança: sincroniza URL, painel visível e botão selecionado. */
+/* Navegação única e consistente entre os painéis. */
 (function () {
-  const aliases = { 'clube-fidelidade': 'clube', 'monte-a-sua': 'pizza', 'home-feed': 'inicio' };
-  function showPanelFromHash() {
-    const raw = (window.location.hash || '#inicio').slice(1);
-    const name = aliases[raw] || raw;
-    const panels = Array.from(document.querySelectorAll('.tab-panel[data-panel]'));
-    const valid = panels.some(panel => panel.dataset.panel === name);
-    const target = valid ? name : 'inicio';
+  const aliases = {
+    'home-feed': 'inicio',
+    'monte-a-sua': 'pizza',
+    'clube-fidelidade': 'clube'
+  };
+  const allowed = ['inicio', 'cardapio', 'pizza', 'carrinho', 'clube'];
+
+  function showPanel(name, updateUrl) {
+    name = aliases[name] || name;
+    if (!allowed.includes(name)) name = 'inicio';
+
+    const panels = document.querySelectorAll('#app-main .tab-panel[data-panel]');
     panels.forEach(panel => {
-      const active = panel.dataset.panel === target;
+      const active = panel.dataset.panel === name;
       panel.classList.toggle('active', active);
-      panel.setAttribute('aria-hidden', String(!active));
+      panel.setAttribute('aria-hidden', active ? 'false' : 'true');
       panel.style.display = active ? 'block' : 'none';
+      panel.style.visibility = active ? 'visible' : 'hidden';
+      panel.style.opacity = active ? '1' : '0';
+      panel.style.transform = 'none';
     });
+
     document.querySelectorAll('[data-tab]').forEach(button => {
-      const active = button.dataset.tab === target;
+      const active = button.dataset.tab === name;
       button.classList.toggle('active', active);
       if (active) button.setAttribute('aria-current', 'page');
       else button.removeAttribute('aria-current');
     });
-    document.body.dataset.currentTab = target;
+
+    document.body.dataset.currentTab = name;
+    if (updateUrl && location.hash !== '#' + name) {
+      history.replaceState(null, '', '#' + name);
+    }
   }
+
   document.addEventListener('click', function (event) {
     const button = event.target.closest('[data-tab]');
-    if (!button) return;
-    const name = button.dataset.tab;
-    if (!document.querySelector('.tab-panel[data-panel="' + name + '"]')) return;
-    if (window.location.hash !== '#' + name) history.replaceState(null, '', '#' + name);
-    showPanelFromHash();
-    window.scrollTo({ top: 0, behavior: 'auto' });
-  });
-  window.addEventListener('hashchange', showPanelFromHash);
-  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', showPanelFromHash);
-  else showPanelFromHash();
+    if (button && button.dataset.tab) {
+      showPanel(button.dataset.tab, true);
+      window.scrollTo({ top: 0, behavior: 'auto' });
+    }
+    const go = event.target.closest('[data-go-tab]');
+    if (go && go.dataset.goTab) {
+      showPanel(go.dataset.goTab, true);
+      window.scrollTo({ top: 0, behavior: 'auto' });
+    }
+  }, true);
+
+  function syncFromUrl() {
+    showPanel((location.hash || '#inicio').slice(1), false);
+  }
+  window.addEventListener('hashchange', syncFromUrl);
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', syncFromUrl, { once: true });
+  } else {
+    syncFromUrl();
+  }
 })();
 </script>
-<script>
-/* Fallback de navegação para garantir que a aba do endereço sempre apareça. */
-(function () {
-  const names = ['inicio', 'cardapio', 'pizza', 'carrinho', 'clube'];
-  function renderCurrentPanel() {
-    const hash = (location.hash || '#inicio').slice(1);
-    const aliases = { 'home-feed': 'inicio', 'monte-a-sua': 'pizza', 'clube-fidelidade': 'clube' };
-    const current = aliases[hash] || (names.includes(hash) ? hash : 'inicio');
-    const main = document.getElementById('app-main');
-    if (main) {
-      main.style.setProperty('padding-top', '24px', 'important');
-      main.style.setProperty('min-height', '0', 'important');
-      main.style.setProperty('height', 'auto', 'important');
-    }
-    document.querySelectorAll('#app-main .tab-panel[data-panel]').forEach(panel => {
-      const active = panel.dataset.panel === current;
-      panel.classList.toggle('active', active);
-      panel.setAttribute('aria-hidden', String(!active));
-      panel.style.setProperty('display', active ? 'block' : 'none', 'important');
-      panel.style.setProperty('visibility', active ? 'visible' : 'hidden', 'important');
-      panel.style.setProperty('opacity', active ? '1' : '0', 'important');
-      panel.style.setProperty('transform', 'none', 'important');
-      panel.style.setProperty('min-height', '0', 'important');
-      panel.style.setProperty('height', 'auto', 'important');
-    });
-    document.querySelectorAll('[data-tab]').forEach(button => {
-      const active = button.dataset.tab === current;
-      button.classList.toggle('active', active);
-      button.setAttribute('aria-pressed', String(active));
-    });
-    document.body.dataset.currentTab = current;
-  }
-  document.addEventListener('click', event => {
-    const button = event.target.closest('[data-tab]');
-    if (!button) return;
-    const target = button.dataset.tab;
-    if (!names.includes(target)) return;
-    if (location.hash !== '#' + target) history.replaceState(null, '', '#' + target);
-    renderCurrentPanel();
-    window.scrollTo(0, 0);
-  }, true);
-  window.addEventListener('hashchange', renderCurrentPanel);
-  document.addEventListener('DOMContentLoaded', renderCurrentPanel);
-  renderCurrentPanel();
-})();
-</script></body>
+</body>
 </html>
