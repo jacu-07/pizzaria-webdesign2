@@ -118,7 +118,8 @@
     const tip = Math.max(0,Number(safeRead('bellaTip',0))||0);
     const pickup = safeRead('bellaFulfillment','delivery') === 'pickup';
     const delivery = pickup || subtotal === 0 || subtotal >= 150 ? 0 : 8;
-    const total = subtotal + delivery + tip;
+    const discount = pickup ? subtotal * 0.10 : 0;
+    const total = Math.max(0, subtotal - discount + delivery + tip);
     cartCountEls.forEach(el => el.textContent = count);
     cartTotalEls.forEach(el => el.textContent = money(total));
     if (cartItemsHost) {
@@ -149,6 +150,7 @@
         if(!val)return; if(label.startsWith('Subtotal'))val.textContent=money(subtotal);
         if(label.includes('Gorjeta'))val.textContent=money(tip);
         if(label.includes('Taxa de Entrega'))val.textContent=money(delivery);
+        if(label.includes('Retirada') || label.includes('Desconto')) { row.hidden = !pickup; val.textContent = '-' + money(discount); }
         if(label.includes('Cupom')){row.hidden=true;}
       });
       const totalEl=summary.querySelector('[data-cart-total]'); if(totalEl)totalEl.textContent=money(total);
@@ -268,14 +270,6 @@
         if (!confirm('Deseja limpar os itens demonstrativos da sacola?')) return;
         cart = []; saveCart(); renderCart(); showToast('Sacola demonstrativa limpa.');
       });
-    }
-  });
-  $('#tab-carrinho button') && $$('#tab-carrinho button').forEach(button => {
-    if (/Ir para Pagamento/i.test(button.textContent)) {
-      button.addEventListener('click', () => showToast('Pagamento não configurado. Este site ainda não processa pedidos reais.'));
-    }
-    if (/Cupom|PIZZA10/i.test(button.textContent)) {
-      button.addEventListener('click', () => showToast('Cupom demonstrativo: a validação real exige um sistema de pedidos.'));
     }
   });
   // Complemento: dá ação aos controles visuais que antes não tinham eventos.
